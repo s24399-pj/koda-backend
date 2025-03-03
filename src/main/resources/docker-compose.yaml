@@ -1,0 +1,15 @@
+services:
+  postgres_allmo:
+    container_name: postgres_koda
+    image: postgres:17.3
+    ports:
+      - "6001:5432"
+    environment:
+      - POSTGRES_DB=kodadb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    deploy:
+      resources:
+        limits:
+          cpus: "3.0"
+          memory: "2G"
