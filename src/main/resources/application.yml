@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: koda-backend
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://postgres_koda:6001/kodadb
+    username: postgres
+    password: postgres
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: false
+    show-sql: true
