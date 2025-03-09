@@ -12,3 +12,7 @@ spring:
       hibernate:
         format_sql: false
     show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+  liquibase:
+    enabled: false

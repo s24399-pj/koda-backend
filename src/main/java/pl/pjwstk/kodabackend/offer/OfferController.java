@@ -9,5 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/offers")
 @RequiredArgsConstructor
 @Validated
-class OfferController {
+public class OfferController {
+    private final OfferService offerService;
+
+
 }
