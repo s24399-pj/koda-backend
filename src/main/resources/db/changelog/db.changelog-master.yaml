@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - includeAll:
+      path: classpath:db/changelog
+  - changeSet:
+      id: 005-insert-offers
+      author: s25323-pj
+      changes:
+        - sqlFile:
+            path: db/changelog/005-insert-offers.sql

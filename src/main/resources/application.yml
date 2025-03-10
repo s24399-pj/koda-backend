@@ -1,6 +1,8 @@
 spring:
   application:
     name: koda-backend
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://postgres_koda:6001/kodadb
