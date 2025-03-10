@@ -32,8 +32,7 @@ public class CarEquipment {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @OneToOne
-    @JoinColumn(name = "car_details_id", unique = true)
+    @OneToOne(mappedBy = "carEquipment")
     private CarDetails carDetails;
 
     // Komfort

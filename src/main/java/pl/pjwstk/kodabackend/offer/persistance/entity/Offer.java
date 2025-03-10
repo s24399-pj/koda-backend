@@ -57,8 +57,7 @@ public class Offer {
     @OneToOne(cascade = CascadeType.ALL)
     private CarDetails carDetails;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "offer_id")
+    @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<OfferImage> images = new ArrayList<>();
 

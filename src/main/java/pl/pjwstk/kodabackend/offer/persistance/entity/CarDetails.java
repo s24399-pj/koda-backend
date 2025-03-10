@@ -1,5 +1,6 @@
 package pl.pjwstk.kodabackend.offer.persistance.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -7,6 +8,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -78,6 +81,11 @@ public class CarDetails {
     @Column(length = 1000)
     private String additionalFeatures;
 
-    @OneToOne(mappedBy = "carDetails")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "car_equipment_id")
     private CarEquipment carEquipment;
+
+    @OneToOne(mappedBy = "carDetails")
+    private Offer offer;
+
 }
