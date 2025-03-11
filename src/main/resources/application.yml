@@ -2,8 +2,8 @@ spring:
   application:
     name: koda-backend
   datasource:
+    url: jdbc:postgresql://localhost:6001/kodadb
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://postgres_koda:6001/kodadb
     username: postgres
     password: postgres
   jpa:
@@ -11,4 +11,12 @@ spring:
     properties:
       hibernate:
         format_sql: false
+        dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+  liquibase:
+    enabled: false
+
+server:
+  port: 8137
