@@ -1,5 +1,5 @@
 services:
-  postgres_allmo:
+  postgres_koda:
     container_name: postgres_koda
     image: postgres:17.3
     ports:
