@@ -10,6 +10,10 @@ import pl.pjwstk.kodabackend.offer.persistance.entity.CarEquipment;
 public class CarEquipmentMapper {
 
     public CarEquipmentDto mapToCarEquipmentDto(CarEquipment carEquipment) {
+        if (carEquipment == null) {
+            return null;
+        }
+
         return new CarEquipmentDto(
                 carEquipment.getId(),
                 Boolean.TRUE.equals(carEquipment.getAirConditioning()),
@@ -41,7 +45,7 @@ public class CarEquipmentMapper {
                 Boolean.TRUE.equals(carEquipment.getLedLights()),
                 Boolean.TRUE.equals(carEquipment.getAmbientLighting()),
                 Boolean.TRUE.equals(carEquipment.getAutomaticLights()),
-                Boolean.TRUE.equals(carEquipment.getAdapativeLights()),
+                Boolean.TRUE.equals(carEquipment.getAdaptiveLights()),
                 Boolean.TRUE.equals(carEquipment.getHeatedSteeringWheel()),
                 Boolean.TRUE.equals(carEquipment.getElectricTrunk()),
                 Boolean.TRUE.equals(carEquipment.getElectricSunBlind()),

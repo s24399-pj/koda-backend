@@ -1,12 +1,11 @@
 package pl.pjwstk.kodabackend.offer;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import pl.pjwstk.kodabackend.exception.EntityNotFoundException;
 import pl.pjwstk.kodabackend.offer.mapper.OfferMapper;
 import pl.pjwstk.kodabackend.offer.model.OfferDto;
 import pl.pjwstk.kodabackend.offer.persistance.entity.Offer;

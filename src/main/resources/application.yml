@@ -1,8 +1,15 @@
+koda:
+  offer:
+    photos-path: file:///C:/wapro-baza/FOTKI_SKLEP/
+
 spring:
   application:
     name: koda-backend
   liquibase:
-    change-log: classpath:db/changelog/db.changelog-master.yaml
+    change-log: classpath:liquibase/changeLog.yaml
+    enabled: true
+    clear-checksums: true # TEMPORARY clear checksums on startup
+    drop-first: true # TEMPORARY
   datasource:
     url: jdbc:postgresql://localhost:6001/kodadb
     driver-class-name: org.postgresql.Driver
@@ -16,9 +23,10 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
-  liquibase:
-    enabled: false
+      ddl-auto: none
+  sql:
+    init:
+      mode: always # TEMPORARY
 
 server:
   port: 8137

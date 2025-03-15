@@ -1,5 +1,5 @@
+--changeset s25323-pj:002-create-table-car-equipment
 --liquibase formatted sql
---changeset s25323-pj:create-table-Car-Equipment
 
 CREATE TABLE car_equipment
 (

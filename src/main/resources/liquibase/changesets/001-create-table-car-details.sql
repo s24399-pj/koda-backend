@@ -1,5 +1,5 @@
+--changeset s25323-pj:001-create-table-car-details
 --liquibase formatted sql
---changeset s25323-pj:create-table-Car-Details
 
 CREATE TABLE car_details
 (
@@ -24,5 +24,6 @@ CREATE TABLE car_details
     first_owner          BOOLEAN,
     accident_free        BOOLEAN,
     service_history      BOOLEAN,
-    additional_features  VARCHAR(1000)
+    additional_features  VARCHAR(1000),
+    car_equipment_id     UUID
 );

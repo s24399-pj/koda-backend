@@ -2,6 +2,7 @@ package pl.pjwstk.kodabackend.offer.persistance.entity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -9,7 +10,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -60,7 +60,7 @@ public class CarDetails {
     @Enumerated(EnumType.STRING)
     private BodyType bodyType;
 
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = pl.pjwstk.kodabackend.offer.persistance.converter.DriveTypeConverter.class)
     private DriveType driveType;
 
     private Integer enginePower;

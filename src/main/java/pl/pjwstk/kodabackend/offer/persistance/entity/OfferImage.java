@@ -1,5 +1,6 @@
 package pl.pjwstk.kodabackend.offer.persistance.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -40,5 +41,6 @@ public class OfferImage {
 
     @ManyToOne
     @JoinColumn(name = "offer_id")
+    @JsonBackReference
     private Offer offer;
 }

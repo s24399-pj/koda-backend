@@ -1,5 +1,5 @@
 --liquibase formatted sql
---changeset s25323:create-table-Offer
+--changeset s25323:003-create-table-offer
 
 CREATE TABLE offers
 (
