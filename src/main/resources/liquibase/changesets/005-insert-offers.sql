@@ -1,4 +1,4 @@
--- changeset alopalka:005-insert-offers
+-- changeset s24399:005-insert-offers
 -- comment Generate offers
 
 -- Deklaracja zmiennych do przechowywania wygenerowanych UUID

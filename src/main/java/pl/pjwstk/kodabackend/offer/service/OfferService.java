@@ -1,4 +1,4 @@
-package pl.pjwstk.kodabackend.offer;
+package pl.pjwstk.kodabackend.offer.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -8,6 +8,7 @@ import pl.pjwstk.kodabackend.offer.mapper.OfferMapper;
 import pl.pjwstk.kodabackend.offer.model.OfferDto;
 import pl.pjwstk.kodabackend.offer.persistance.repository.OfferRepository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -26,5 +27,9 @@ public class OfferService {
                 );
     }
 
+    @Transactional(readOnly = true)
+    public List<String> findOfferNamesByPhrase(String phrase) {
+        return null;
+    }
 
 }
