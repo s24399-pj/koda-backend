@@ -1,4 +1,6 @@
 koda:
+  frontend:
+    url: http://localhost:5173
   offer:
     photos-path: file:///C:/wapro-baza/FOTKI_SKLEP/
 
