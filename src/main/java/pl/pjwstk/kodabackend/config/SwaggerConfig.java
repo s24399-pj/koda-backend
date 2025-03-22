@@ -12,10 +12,10 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 
 @Configuration
-public class SwaggerConfig {
+class SwaggerConfig {
 
     @Bean
-    public OpenAPI customOpenAPI(@Value("${koda.frontend.url}") String frontendUrl) {
+    OpenAPI customOpenAPI(@Value("${koda.frontend.url}") String frontendUrl) {
 
         return new OpenAPI()
                 .info(new Info()
