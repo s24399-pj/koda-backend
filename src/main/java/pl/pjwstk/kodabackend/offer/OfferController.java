@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.UUID;
 
 @Tag(name = "Offers", description = "API for managing car offers")
-@RequestMapping("/api/v1/offers")
 public interface OfferController {
 
     @Operation(
