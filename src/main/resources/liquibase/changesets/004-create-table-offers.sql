@@ -1,5 +1,5 @@
 --liquibase formatted sql
---changeset s25323:003-create-table-offer
+--changeset s25323:004-create-table-offer
 
 CREATE TABLE offers
 (
@@ -10,6 +10,7 @@ CREATE TABLE offers
     car_details_id  UUID UNIQUE,
     price           NUMERIC(19, 2),
     currency        VARCHAR(10),
+    app_user_id     UUID,
     location        VARCHAR(255),
     contact_phone   VARCHAR(50),
     contact_email   VARCHAR(255),
@@ -19,5 +20,6 @@ CREATE TABLE offers
     view_count      INTEGER,
     featured        BOOLEAN          DEFAULT FALSE,
     negotiable      BOOLEAN          DEFAULT TRUE,
-    CONSTRAINT fk_car_details FOREIGN KEY (car_details_id) REFERENCES car_details (id)
+    CONSTRAINT fk_car_details FOREIGN KEY (car_details_id) REFERENCES car_details (id),
+    CONSTRAINT fk_app_user FOREIGN KEY (app_user_id) REFERENCES app_users (id)
 );

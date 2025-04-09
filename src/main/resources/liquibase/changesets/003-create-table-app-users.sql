@@ -1,4 +1,4 @@
---changeset alopalka:006-create-table-app-users
+--changeset alopalka:003-create-table-app-users
 --liquibase formatted sql
 
 CREATE TABLE app_users

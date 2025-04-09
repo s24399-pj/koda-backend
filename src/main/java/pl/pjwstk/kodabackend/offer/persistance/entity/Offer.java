@@ -8,6 +8,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -21,6 +23,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
+import pl.pjwstk.kodabackend.security.user.persistance.entity.AppUser;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -63,10 +66,9 @@ public class Offer {
     private BigDecimal price;
     private String currency;
 
-//  TODO add seller/user domain
-//    @ManyToOne
-//    @JoinColumn(name = "seller_id")
-//    private User seller;
+    @ManyToOne
+    @JoinColumn(name = "app_user_id")
+    private AppUser seller;
 
     private String location;
     private String contactPhone;
