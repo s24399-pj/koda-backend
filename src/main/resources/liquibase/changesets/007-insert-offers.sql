@@ -1,4 +1,4 @@
--- changeset s24399:005-insert-offers
+-- changeset s24399:007-insert-offers
 -- comment Generate offers
 
 -- Deklaracja zmiennych do przechowywania wygenerowanych UUID
@@ -27,7 +27,14 @@ car_equipment_id1 UUID := gen_random_uuid();
     offer_id5 UUID := gen_random_uuid();
     offer_id6 UUID := gen_random_uuid();
     offer_id7 UUID := gen_random_uuid();
+
+    -- Pobierz UUID użytkowników
+    admin_id UUID;
+    dealer_id UUID;
 BEGIN
+    -- Pobierz ID użytkowników
+SELECT id INTO admin_id FROM app_users WHERE email = 'mir@koda.com';
+SELECT id INTO dealer_id FROM app_users WHERE email = 'slavdeal@koda.com';
 
 -- Insert do tabeli car_equipment
 INSERT INTO car_equipment (
@@ -137,21 +144,21 @@ VALUES
     (car_details_id7, 'BMW', 'M4 CSL G82', 2022, 'Szary', '3.0L', 'WBS73AZ01NCG87654', 8000, 'PETROL', 'AUTOMATIC', 'COUPE', 'RWD', 550, 2, 4, 'USED', 'GD43210', 'PL', TRUE, TRUE, TRUE, 'Karbonowa maska, Karbonowe fotele, M Drive Professional, Układ wydechowy M Sport, Pakiet CSL', car_equipment_id7);
 
 -- Insert do tabeli offer
-INSERT INTO offers (id, title, description, car_details_id, price, currency, location, contact_phone, contact_email, created_at, updated_at, expiration_date, view_count, featured, negotiable, version)
+INSERT INTO offers (id, title, description, car_details_id, price, currency, app_user_id, location, contact_phone, contact_email, created_at, updated_at, expiration_date, view_count, featured, negotiable, version)
 VALUES
-    (offer_id1, 'Toyota Corolla TS 2.0 Dynamic Force Hybrid', 'Toyota Corolla w wersji kombi z hybrydowym napędem 2.0L Dynamic Force. Samochód w bardzo dobrym stanie technicznym i wizualnym, regularnie serwisowany, bezwypadkowy. Pierwszy właściciel, komplet dokumentów serwisowych.', car_details_id1, 112000, 'PLN', 'Warszawa', '123456789', 'kontakt@toyota.pl', NOW(), NOW(), '2025-12-31', 0, FALSE, TRUE, 1),
+    (offer_id1, 'Toyota Corolla TS 2.0 Dynamic Force Hybrid', 'Toyota Corolla w wersji kombi z hybrydowym napędem 2.0L Dynamic Force. Samochód w bardzo dobrym stanie technicznym i wizualnym, regularnie serwisowany, bezwypadkowy. Pierwszy właściciel, komplet dokumentów serwisowych.', car_details_id1, 112000, 'PLN', admin_id, 'Warszawa', '123456789', 'kontakt@toyota.pl', NOW(), NOW(), '2025-12-31', 0, FALSE, TRUE, 1),
 
-    (offer_id2, 'Honda Civic Sedan 1.5 VTEC Turbo Executive', 'Honda Civic w najwyższej wersji wyposażenia Executive z silnikiem 1.5 VTEC Turbo. Samochód jak nowy, niski przebieg, pełna historia serwisowa ASO Honda. Idealny dla osób ceniących komfort i niezawodność.', car_details_id2, 125000, 'PLN', 'Wrocław', '987654321', 'kontakt@honda.pl', NOW(), NOW(), '2025-12-31', 0, FALSE, FALSE, 1),
+    (offer_id2, 'Honda Civic Sedan 1.5 VTEC Turbo Executive', 'Honda Civic w najwyższej wersji wyposażenia Executive z silnikiem 1.5 VTEC Turbo. Samochód jak nowy, niski przebieg, pełna historia serwisowa ASO Honda. Idealny dla osób ceniących komfort i niezawodność.', car_details_id2, 125000, 'PLN', admin_id, 'Wrocław', '987654321', 'kontakt@honda.pl', NOW(), NOW(), '2025-12-31', 0, FALSE, FALSE, 1),
 
-    (offer_id3, 'BMW M5 Competition F90 - 625KM - Limitowana edycja', 'BMW M5 Competition w idealnym stanie. Samochód serwisowany w ASO, pełna historia serwisowa, drugi właściciel. Pakiet Competition, pełne wyposażenie. Możliwość sprawdzenia w dowolnym serwisie. Prawdziwy potwór mocy w eleganckiej limuzynie.', car_details_id3, 450000, 'PLN', 'Kraków', '555444333', 'bmw.sprzedaz@example.com', NOW(), NOW(), '2025-12-15', 0, TRUE, TRUE, 1),
+    (offer_id3, 'BMW M5 Competition F90 - 625KM - Limitowana edycja', 'BMW M5 Competition w idealnym stanie. Samochód serwisowany w ASO, pełna historia serwisowa, drugi właściciel. Pakiet Competition, pełne wyposażenie. Możliwość sprawdzenia w dowolnym serwisie. Prawdziwy potwór mocy w eleganckiej limuzynie.', car_details_id3, 450000, 'PLN', dealer_id, 'Kraków', '555444333', 'bmw.sprzedaz@example.com', NOW(), NOW(), '2025-12-15', 0, TRUE, TRUE, 1),
 
-    (offer_id4, 'Ford Focus RS MK3 - Kultowy hot-hatch w kolorze Nitrous Blue', 'Ford Focus RS w oryginalnym niebieskim kolorze Nitrous Blue. Samochód w pełni sprawny, regularnie serwisowany. Niewielkie ślady użytkowania. Prawdziwa gratka dla fanów szybkich hatchbacków. Auto jest wyposażone w unikatowy tryb Drift, który pozwala na kontrolowane poślizgi.', car_details_id4, 120000, 'PLN', 'Poznań', '111222333', 'focusrs@example.com', NOW(), NOW(), '2025-11-30', 0, TRUE, FALSE, 1),
+    (offer_id4, 'Ford Focus RS MK3 - Kultowy hot-hatch w kolorze Nitrous Blue', 'Ford Focus RS w oryginalnym niebieskim kolorze Nitrous Blue. Samochód w pełni sprawny, regularnie serwisowany. Niewielkie ślady użytkowania. Prawdziwa gratka dla fanów szybkich hatchbacków. Auto jest wyposażone w unikatowy tryb Drift, który pozwala na kontrolowane poślizgi.', car_details_id4, 120000, 'PLN', dealer_id, 'Poznań', '111222333', 'focusrs@example.com', NOW(), NOW(), '2025-11-30', 0, TRUE, FALSE, 1),
 
-    (offer_id5, 'Skoda Octavia RS 245KM - Kombi z mocą sportowego auta', 'Skoda Octavia RS w doskonałym stanie technicznym i wizualnym. Samochód regularnie serwisowany w ASO z pełną dokumentacją. Pierwszy właściciel, bezwypadkowy. Idealny dla osób szukających praktycznego auta z duszą sportowca. Virtual cockpit, automatyczna skrzynia DSG, pakiet czerni.', car_details_id5, 95000, 'PLN', 'Gdańsk', '333222111', 'octavia.rs@example.com', NOW(), NOW(), '2025-11-15', 0, FALSE, TRUE, 1),
+    (offer_id5, 'Skoda Octavia RS 245KM - Kombi z mocą sportowego auta', 'Skoda Octavia RS w doskonałym stanie technicznym i wizualnym. Samochód regularnie serwisowany w ASO z pełną dokumentacją. Pierwszy właściciel, bezwypadkowy. Idealny dla osób szukających praktycznego auta z duszą sportowca. Virtual cockpit, automatyczna skrzynia DSG, pakiet czerni.', car_details_id5, 95000, 'PLN', admin_id, 'Gdańsk', '333222111', 'octavia.rs@example.com', NOW(), NOW(), '2025-11-15', 0, FALSE, TRUE, 1),
 
-    (offer_id6, 'Volkswagen Golf MK8 R 320KM - Najnowsza generacja ikony hot-hatchy', 'Golf R MK8 w idealnym stanie, jak nowy. Bogato wyposażony, wszystkie dostępne opcje. Auto serwisowane wyłącznie w ASO VW z pełną dokumentacją. Pierwszy właściciel, garażowany. Możliwość sprawdzenia w dowolnym serwisie. Wersja z pakietem R-Performance i wydechem Akrapovic.', car_details_id6, 180000, 'PLN', 'Łódź', '444555666', 'golf.r@example.com', NOW(), NOW(), '2025-10-30', 0, TRUE, FALSE, 1),
+    (offer_id6, 'Volkswagen Golf MK8 R 320KM - Najnowsza generacja ikony hot-hatchy', 'Golf R MK8 w idealnym stanie, jak nowy. Bogato wyposażony, wszystkie dostępne opcje. Auto serwisowane wyłącznie w ASO VW z pełną dokumentacją. Pierwszy właściciel, garażowany. Możliwość sprawdzenia w dowolnym serwisie. Wersja z pakietem R-Performance i wydechem Akrapovic.', car_details_id6, 180000, 'PLN', dealer_id, 'Łódź', '444555666', 'golf.r@example.com', NOW(), NOW(), '2025-10-30', 0, TRUE, FALSE, 1),
 
-    (offer_id7, 'BMW M4 CSL G82 550KM - Limitowana edycja z numerem', 'Unikatowe BMW M4 CSL - jeden z 1000 wyprodukowanych egzemplarzy. Samochód kolekcjonerski, idealny stan, niski przebieg. Pełne wyposażenie z M Carbon pakietem. Historia serwisowa udokumentowana, wszystkie przeglądy w ASO BMW. Karbonowy dach, maska i zderzaki. Prawdziwe auto dla kolekcjonerów.', car_details_id7, 650000, 'PLN', 'Warszawa', '777888999', 'm4csl@example.com', NOW(), NOW(), '2025-12-20', 0, TRUE, TRUE, 1);
+    (offer_id7, 'BMW M4 CSL G82 550KM - Limitowana edycja z numerem', 'Unikatowe BMW M4 CSL - jeden z 1000 wyprodukowanych egzemplarzy. Samochód kolekcjonerski, idealny stan, niski przebieg. Pełne wyposażenie z M Carbon pakietem. Historia serwisowa udokumentowana, wszystkie przeglądy w ASO BMW. Karbonowy dach, maska i zderzaki. Prawdziwe auto dla kolekcjonerów.', car_details_id7, 650000, 'PLN', dealer_id, 'Warszawa', '777888999', 'm4csl@example.com', NOW(), NOW(), '2025-12-20', 0, TRUE, TRUE, 1);
 
 -- Insert do tabeli offer_images
 INSERT INTO offer_images (id, url, caption, is_primary, sort_order, offer_id)

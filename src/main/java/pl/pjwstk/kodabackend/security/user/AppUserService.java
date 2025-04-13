@@ -56,4 +56,9 @@ public class AppUserService {
                 .build();
     }
 
+    public AppUser getUserByEmail(String email) {
+        return appUserRepository.findByEmail(email)
+                .orElseThrow(() -> new BadCredentialsException("User not found"));
+    }
+
 }

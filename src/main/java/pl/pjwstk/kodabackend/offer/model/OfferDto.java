@@ -13,6 +13,7 @@ public record OfferDto(
         List<String> imageUrls,
         BigDecimal price,
         String currency,
+        UserDto seller,
         String location,
         String contactPhone,
         String contactEmail,

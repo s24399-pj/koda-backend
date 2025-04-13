@@ -1,4 +1,4 @@
---changeset alopalka:007-create-tokens
+--changeset alopalka:008-create-tokens
 --liquibase formatted sql
 
 CREATE TABLE token

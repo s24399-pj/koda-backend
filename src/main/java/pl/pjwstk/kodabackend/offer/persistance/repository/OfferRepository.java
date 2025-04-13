@@ -21,6 +21,7 @@ public interface OfferRepository extends JpaRepository<Offer, UUID> {
             "LEFT JOIN FETCH o.carDetails cd " +
             "LEFT JOIN FETCH cd.carEquipment " +
             "LEFT JOIN FETCH o.images " +
+            "LEFT JOIN FETCH o.seller " +
             "WHERE o.id = :id")
     Optional<Offer> findByIdWithDetails(@Param("id") UUID id);
 

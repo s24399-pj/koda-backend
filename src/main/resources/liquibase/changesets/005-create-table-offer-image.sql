@@ -1,5 +1,5 @@
 --liquibase formatted sql
---changeset s25323-pj:004-create-table-offer-image
+--changeset s25323-pj:006-create-table-offer-image
 
 CREATE TABLE offer_images
 (
