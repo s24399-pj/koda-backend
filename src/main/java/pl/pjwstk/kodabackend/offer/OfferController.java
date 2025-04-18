@@ -7,19 +7,20 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import pl.pjwstk.kodabackend.offer.model.CreateOfferCommand;
 import pl.pjwstk.kodabackend.offer.model.OfferDto;
 import pl.pjwstk.kodabackend.offer.model.OfferMiniDto;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
@@ -104,5 +105,42 @@ public interface OfferController {
     OfferDto findOfferById(
             @Parameter(description = "Offer UUID identifier", required = true)
             @PathVariable UUID id
+    );
+
+    @Operation(
+            summary = "Create new car offer",
+            description = "Creates a new car offer with detailed information. User must be authenticated."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Successfully created a new offer",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = OfferDto.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid offer data",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized, user not logged in",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Forbidden, user does not have required permissions",
+                    content = @Content
+            )
+    })
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    OfferDto createOffer(
+            @Parameter(description = "Offer creation data", required = true)
+            @Valid @RequestBody CreateOfferCommand createOfferCommand,
+            Principal principal
     );
 }

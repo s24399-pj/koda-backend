@@ -2,8 +2,11 @@ package pl.pjwstk.kodabackend.offer.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import pl.pjwstk.kodabackend.offer.model.CreateOfferCommand;
 import pl.pjwstk.kodabackend.offer.model.OfferDto;
 import pl.pjwstk.kodabackend.offer.model.UserDto;
+import pl.pjwstk.kodabackend.offer.persistance.entity.CarDetails;
+import pl.pjwstk.kodabackend.offer.persistance.entity.CarEquipment;
 import pl.pjwstk.kodabackend.offer.persistance.entity.Offer;
 import pl.pjwstk.kodabackend.offer.persistance.entity.OfferImage;
 import pl.pjwstk.kodabackend.security.user.persistance.entity.AppUser;
@@ -64,4 +67,104 @@ public class OfferMapper {
                 .map(OfferImage::getUrl)
                 .toList();
     }
+
+    public Offer mapToOffer(CreateOfferCommand command) {
+        // Tworzenie obiektu CarEquipment
+        CarEquipment carEquipment = null;
+        if (command.getEquipment() != null) {
+            carEquipment = CarEquipment.builder()
+                    // Komfort
+                    .airConditioning(command.getEquipment().getAirConditioning())
+                    .automaticClimate(command.getEquipment().getAutomaticClimate())
+                    .heatedSeats(command.getEquipment().getHeatedSeats())
+                    .electricSeats(command.getEquipment().getElectricSeats())
+                    .leatherSeats(command.getEquipment().getLeatherSeats())
+                    .panoramicRoof(command.getEquipment().getPanoramicRoof())
+                    .electricWindows(command.getEquipment().getElectricWindows())
+                    .electricMirrors(command.getEquipment().getElectricMirrors())
+                    .keylessEntry(command.getEquipment().getKeylessEntry())
+                    .wheelHeating(command.getEquipment().getWheelHeating())
+                    // Multimedia
+                    .navigationSystem(command.getEquipment().getNavigationSystem())
+                    .bluetooth(command.getEquipment().getBluetooth())
+                    .usbPort(command.getEquipment().getUsbPort())
+                    .multifunction(command.getEquipment().getMultifunction())
+                    .androidAuto(command.getEquipment().getAndroidAuto())
+                    .appleCarPlay(command.getEquipment().getAppleCarPlay())
+                    .soundSystem(command.getEquipment().getSoundSystem())
+                    // Systemy wspomagające
+                    .parkingSensors(command.getEquipment().getParkingSensors())
+                    .rearCamera(command.getEquipment().getRearCamera())
+                    .cruiseControl(command.getEquipment().getCruiseControl())
+                    .adaptiveCruiseControl(command.getEquipment().getAdaptiveCruiseControl())
+                    .laneAssist(command.getEquipment().getLaneAssist())
+                    .blindSpotDetection(command.getEquipment().getBlindSpotDetection())
+                    .emergencyBraking(command.getEquipment().getEmergencyBraking())
+                    .startStop(command.getEquipment().getStartStop())
+                    // Oświetlenie
+                    .xenonLights(command.getEquipment().getXenonLights())
+                    .ledLights(command.getEquipment().getLedLights())
+                    .ambientLighting(command.getEquipment().getAmbientLighting())
+                    .automaticLights(command.getEquipment().getAutomaticLights())
+                    .adaptiveLights(command.getEquipment().getAdaptiveLights())
+                    // Dodatkowe funkcje
+                    .heatedSteeringWheel(command.getEquipment().getHeatedSteeringWheel())
+                    .electricTrunk(command.getEquipment().getElectricTrunk())
+                    .electricSunBlind(command.getEquipment().getElectricSunBlind())
+                    .headUpDisplay(command.getEquipment().getHeadUpDisplay())
+                    .aromatherapy(command.getEquipment().getAromatherapy())
+                    .build();
+        }
+
+        // Tworzenie obiektu CarDetails
+        CarDetails carDetails = CarDetails.builder()
+                .brand(command.getBrand())
+                .model(command.getModel())
+                .year(command.getYear())
+                .color(command.getColor())
+                .displacement(command.getDisplacement())
+                .vin(command.getVin())
+                .mileage(command.getMileage())
+                .fuelType(command.getFuelType())
+                .transmission(command.getTransmission())
+                .bodyType(command.getBodyType())
+                .driveType(command.getDriveType())
+                .enginePower(command.getEnginePower())
+                .doors(command.getDoors())
+                .seats(command.getSeats())
+                .condition(command.getCondition())
+                .registrationNumber(command.getRegistrationNumber())
+                .registrationCountry(command.getRegistrationCountry())
+                .firstOwner(command.getFirstOwner())
+                .accidentFree(command.getAccidentFree())
+                .serviceHistory(command.getServiceHistory())
+                .additionalFeatures(command.getAdditionalFeatures())
+                .carEquipment(carEquipment)
+                .build();
+
+        // Tworzenie obiektu Offer
+        Offer offer = Offer.builder()
+                .title(command.getTitle())
+                .description(command.getDescription())
+                .price(command.getPrice())
+                .currency(command.getCurrency())
+                .location(command.getLocation())
+                .contactPhone(command.getContactPhone())
+                .contactEmail(command.getContactEmail())
+                .expirationDate(command.getExpirationDate())
+                .negotiable(command.isNegotiable())
+                .carDetails(carDetails)
+                .build();
+
+        if (carDetails != null) {
+            carDetails.setOffer(offer);
+        }
+
+        if (carEquipment != null && carDetails != null) {
+            carEquipment.setCarDetails(carDetails);
+        }
+
+        return offer;
+    }
+
 }
