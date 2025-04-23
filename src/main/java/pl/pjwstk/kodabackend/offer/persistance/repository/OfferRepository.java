@@ -115,4 +115,150 @@ public interface OfferRepository extends JpaRepository<Offer, UUID> {
 
     @Query("SELECT DISTINCT o.title FROM Offer o WHERE LOWER(o.title) LIKE LOWER(CONCAT('%', :phrase, '%')) ORDER BY o.title")
     List<String> findDistinctTitlesByPhrase(@Param("phrase") String phrase);
+
+    // Nowe metody dla filtrowania po użytkowniku
+
+    /**
+     * Finds all offers by owner/user ID.
+     */
+    @Query("SELECT new pl.pjwstk.kodabackend.offer.model.OfferMiniDto(" +
+            "o.id, o.title, o.price, " +
+            "(SELECT img.url FROM OfferImage img WHERE img.offer = o AND img.isPrimary = true), " +
+            "cd.mileage, cd.fuelType, cd.year, cd.enginePower, cd.displacement) " +
+            "FROM Offer o " +
+            "JOIN o.carDetails cd " +
+            "JOIN o.seller s " +
+            "WHERE s.id = :userId")
+    Page<OfferMiniDto> findByUserId(@Param("userId") UUID userId, Pageable pageable);
+
+    /**
+     * Finds all offers by phrase and owner/user ID.
+     */
+    @Query("SELECT new pl.pjwstk.kodabackend.offer.model.OfferMiniDto(" +
+            "o.id, o.title, o.price, " +
+            "(SELECT img.url FROM OfferImage img WHERE img.offer = o AND img.isPrimary = true), " +
+            "cd.mileage, cd.fuelType, cd.year, cd.enginePower, cd.displacement) " +
+            "FROM Offer o " +
+            "JOIN o.carDetails cd " +
+            "JOIN o.seller s " +
+            "WHERE (LOWER(o.title) LIKE LOWER(CONCAT('%', :phrase, '%')) OR " +
+            "LOWER(o.description) LIKE LOWER(CONCAT('%', :phrase, '%'))) AND " +
+            "s.id = :userId")
+    Page<OfferMiniDto> findByPhraseAndUserId(
+            @Param("phrase") String phrase,
+            @Param("userId") UUID userId,
+            Pageable pageable);
+
+    /**
+     * Finds all offers by price range and owner/user ID.
+     */
+    @Query("SELECT new pl.pjwstk.kodabackend.offer.model.OfferMiniDto(" +
+            "o.id, o.title, o.price, " +
+            "(SELECT img.url FROM OfferImage img WHERE img.offer = o AND img.isPrimary = true), " +
+            "cd.mileage, cd.fuelType, cd.year, cd.enginePower, cd.displacement) " +
+            "FROM Offer o " +
+            "JOIN o.carDetails cd " +
+            "JOIN o.seller s " +
+            "WHERE o.price BETWEEN :minPrice AND :maxPrice AND " +
+            "s.id = :userId")
+    Page<OfferMiniDto> findByPriceRangeAndUserId(
+            @Param("minPrice") BigDecimal minPrice,
+            @Param("maxPrice") BigDecimal maxPrice,
+            @Param("userId") UUID userId,
+            Pageable pageable);
+
+    /**
+     * Finds all offers by phrase, price range and owner/user ID.
+     */
+    @Query("SELECT new pl.pjwstk.kodabackend.offer.model.OfferMiniDto(" +
+            "o.id, o.title, o.price, " +
+            "(SELECT img.url FROM OfferImage img WHERE img.offer = o AND img.isPrimary = true), " +
+            "cd.mileage, cd.fuelType, cd.year, cd.enginePower, cd.displacement) " +
+            "FROM Offer o " +
+            "JOIN o.carDetails cd " +
+            "JOIN o.seller s " +
+            "WHERE (LOWER(o.title) LIKE LOWER(CONCAT('%', :phrase, '%')) OR " +
+            "LOWER(o.description) LIKE LOWER(CONCAT('%', :phrase, '%'))) AND " +
+            "o.price BETWEEN :minPrice AND :maxPrice AND " +
+            "s.id = :userId")
+    Page<OfferMiniDto> findByPhraseAndPriceRangeAndUserId(
+            @Param("phrase") String phrase,
+            @Param("minPrice") BigDecimal minPrice,
+            @Param("maxPrice") BigDecimal maxPrice,
+            @Param("userId") UUID userId,
+            Pageable pageable);
+
+    /**
+     * Finds all offers by minimum price and owner/user ID.
+     */
+    @Query("SELECT new pl.pjwstk.kodabackend.offer.model.OfferMiniDto(" +
+            "o.id, o.title, o.price, " +
+            "(SELECT img.url FROM OfferImage img WHERE img.offer = o AND img.isPrimary = true), " +
+            "cd.mileage, cd.fuelType, cd.year, cd.enginePower, cd.displacement) " +
+            "FROM Offer o " +
+            "JOIN o.carDetails cd " +
+            "JOIN o.seller s " +
+            "WHERE o.price >= :minPrice AND " +
+            "s.id = :userId")
+    Page<OfferMiniDto> findByMinPriceAndUserId(
+            @Param("minPrice") BigDecimal minPrice,
+            @Param("userId") UUID userId,
+            Pageable pageable);
+
+    /**
+     * Finds all offers by maximum price and owner/user ID.
+     */
+    @Query("SELECT new pl.pjwstk.kodabackend.offer.model.OfferMiniDto(" +
+            "o.id, o.title, o.price, " +
+            "(SELECT img.url FROM OfferImage img WHERE img.offer = o AND img.isPrimary = true), " +
+            "cd.mileage, cd.fuelType, cd.year, cd.enginePower, cd.displacement) " +
+            "FROM Offer o " +
+            "JOIN o.carDetails cd " +
+            "JOIN o.seller s " +
+            "WHERE o.price <= :maxPrice AND " +
+            "s.id = :userId")
+    Page<OfferMiniDto> findByMaxPriceAndUserId(
+            @Param("maxPrice") BigDecimal maxPrice,
+            @Param("userId") UUID userId,
+            Pageable pageable);
+
+    /**
+     * Finds all offers by phrase and minimum price and owner/user ID.
+     */
+    @Query("SELECT new pl.pjwstk.kodabackend.offer.model.OfferMiniDto(" +
+            "o.id, o.title, o.price, " +
+            "(SELECT img.url FROM OfferImage img WHERE img.offer = o AND img.isPrimary = true), " +
+            "cd.mileage, cd.fuelType, cd.year, cd.enginePower, cd.displacement) " +
+            "FROM Offer o " +
+            "JOIN o.carDetails cd " +
+            "JOIN o.seller s " +
+            "WHERE (LOWER(o.title) LIKE LOWER(CONCAT('%', :phrase, '%')) OR " +
+            "LOWER(o.description) LIKE LOWER(CONCAT('%', :phrase, '%'))) AND " +
+            "o.price >= :minPrice AND " +
+            "s.id = :userId")
+    Page<OfferMiniDto> findByPhraseAndMinPriceAndUserId(
+            @Param("phrase") String phrase,
+            @Param("minPrice") BigDecimal minPrice,
+            @Param("userId") UUID userId,
+            Pageable pageable);
+
+    /**
+     * Finds all offers by phrase and maximum price and owner/user ID.
+     */
+    @Query("SELECT new pl.pjwstk.kodabackend.offer.model.OfferMiniDto(" +
+            "o.id, o.title, o.price, " +
+            "(SELECT img.url FROM OfferImage img WHERE img.offer = o AND img.isPrimary = true), " +
+            "cd.mileage, cd.fuelType, cd.year, cd.enginePower, cd.displacement) " +
+            "FROM Offer o " +
+            "JOIN o.carDetails cd " +
+            "JOIN o.seller s " +
+            "WHERE (LOWER(o.title) LIKE LOWER(CONCAT('%', :phrase, '%')) OR " +
+            "LOWER(o.description) LIKE LOWER(CONCAT('%', :phrase, '%'))) AND " +
+            "o.price <= :maxPrice AND " +
+            "s.id = :userId")
+    Page<OfferMiniDto> findByPhraseAndMaxPriceAndUserId(
+            @Param("phrase") String phrase,
+            @Param("maxPrice") BigDecimal maxPrice,
+            @Param("userId") UUID userId,
+            Pageable pageable);
 }

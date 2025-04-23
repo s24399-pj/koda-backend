@@ -34,11 +34,16 @@ class OfferControllerImpl implements OfferController {
 
     @GetMapping
     @Override
-    public Page<OfferMiniDto> findAllMini(Pageable pageable, String phrase, BigDecimal minPrice, BigDecimal maxPrice) {
+    public Page<OfferMiniDto> findAllMini(Pageable pageable,
+                                          String phrase,
+                                          BigDecimal minPrice,
+                                          BigDecimal maxPrice,
+                                          UUID userId) {
         return offerMiniService.findAllOfferMini(sortingAliasProcessor(pageable),
                 phrase,
                 minPrice,
-                maxPrice);
+                maxPrice,
+                userId);
     }
 
     @GetMapping("/find")

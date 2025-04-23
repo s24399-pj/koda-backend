@@ -54,7 +54,9 @@ public interface OfferController {
             @Parameter(description = "Minimum price")
             @RequestParam(required = false) BigDecimal minPrice,
             @Parameter(description = "Maximum price")
-            @RequestParam(required = false) BigDecimal maxPrice
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @Parameter(description = "Owner/User ID to filter offers")
+            @RequestParam(required = false) UUID userId
     );
 
     @Operation(
