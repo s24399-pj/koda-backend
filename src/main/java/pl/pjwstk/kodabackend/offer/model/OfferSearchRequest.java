@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 /**
  * Represents search parameters for offer search operations.
@@ -20,6 +21,16 @@ public class OfferSearchRequest {
     private BigDecimal minPrice;
     private BigDecimal maxPrice;
     private Pageable pageable;
+    private UUID userId;
+
+    /**
+     * Checks if a user ID filter is provided.
+     *
+     * @return true if user ID is provided
+     */
+    public boolean hasUserId() {
+        return userId != null;
+    }
 
     /**
      * Checks if a search phrase is provided.

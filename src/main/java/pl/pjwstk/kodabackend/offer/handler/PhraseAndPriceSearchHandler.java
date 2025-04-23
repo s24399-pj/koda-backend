@@ -18,15 +18,24 @@ public class PhraseAndPriceSearchHandler extends BaseOfferSearchHandler {
     @Override
     public Page<OfferMiniDto> handle(OfferSearchRequest request) {
         if (request.hasPhrase() && request.hasPriceRange()) {
-            return offerRepository.findByPhraseAndPriceRange(
-                    request.getPhrase(),
-                    request.getMinPrice(),
-                    request.getMaxPrice(),
-                    request.getPageable());
+
+            if (request.hasUserId()) {
+                return offerRepository.findByPhraseAndPriceRangeAndUserId(
+                        request.getPhrase(),
+                        request.getMinPrice(),
+                        request.getMaxPrice(),
+                        request.getUserId(),
+                        request.getPageable());
+            } else {
+                return offerRepository.findByPhraseAndPriceRange(
+                        request.getPhrase(),
+                        request.getMinPrice(),
+                        request.getMaxPrice(),
+                        request.getPageable());
+            }
         }
         return processNext(request);
     }
-
     @Override
     public int getOrder() {
         return 1;

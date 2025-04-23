@@ -23,6 +23,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.Optional;
+import java.util.UUID;
+
 
 /**
  * Service responsible for searching offers in MiniDto form.
@@ -80,10 +82,11 @@ public class OfferMiniService {
             Pageable pageable,
             @Nullable String phrase,
             @Nullable BigDecimal minPrice,
-            @Nullable BigDecimal maxPrice) {
+            @Nullable BigDecimal maxPrice,
+            @Nullable UUID userId) {
 
         // Create search request
-        OfferSearchRequest searchRequest = buildSearchRequest(pageable, phrase, minPrice, maxPrice);
+        OfferSearchRequest searchRequest = buildSearchRequest(pageable, phrase, minPrice, maxPrice, userId);
 
         logSearchParameters(searchRequest);
 
@@ -103,13 +106,15 @@ public class OfferMiniService {
             Pageable pageable,
             String phrase,
             BigDecimal minPrice,
-            BigDecimal maxPrice) {
+            BigDecimal maxPrice,
+            UUID userId) {
 
         return OfferSearchRequest.builder()
                 .phrase(StringUtils.hasText(phrase) ? phrase.trim() : null)
                 .minPrice(minPrice)
                 .maxPrice(maxPrice)
                 .pageable(pageable)
+                .userId(userId)
                 .build();
     }
 
@@ -128,11 +133,16 @@ public class OfferMiniService {
                 logMessage.append("price range=")
                         .append(request.getMinPrice())
                         .append("-")
-                        .append(request.getMaxPrice());
+                        .append(request.getMaxPrice())
+                        .append(", ");
             } else if (request.getMinPrice() != null) {
-                logMessage.append("minPrice=").append(request.getMinPrice());
+                logMessage.append("minPrice=").append(request.getMinPrice()).append(", ");
             } else if (request.getMaxPrice() != null) {
-                logMessage.append("maxPrice=").append(request.getMaxPrice());
+                logMessage.append("maxPrice=").append(request.getMaxPrice()).append(", ");
+            }
+
+            if (request.hasUserId()) {
+                logMessage.append("userId=").append(request.getUserId());
             }
 
             log.debug(logMessage.toString());
