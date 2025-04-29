@@ -14,8 +14,8 @@ spring:
   liquibase:
     change-log: classpath:liquibase/changeLog.yaml
     enabled: true
-    clear-checksums: true # TEMPORARY clear checksums on startup
-    drop-first: true # TEMPORARY
+    clear-checksums: true
+    drop-first: false
   datasource:
     url: jdbc:postgresql://localhost:6001/kodadb
     driver-class-name: org.postgresql.Driver
@@ -30,9 +30,6 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: none
-  sql:
-    init:
-      mode: always # TEMPORARY
 
 server:
   port: 8137
