@@ -66,12 +66,10 @@ class OfferMiniServiceTest {
 
     @BeforeEach
     void setUp() {
-        // Configure handler order - używamy lenient() aby uniknąć "unnecessary stubbings"
         lenient().when(firstHandler.getOrder()).thenReturn(1);
         lenient().when(secondHandler.getOrder()).thenReturn(2);
         lenient().when(thirdHandler.getOrder()).thenReturn(3);
 
-        // Add handlers to the set
         handlers.add(firstHandler);
         handlers.add(secondHandler);
         handlers.add(thirdHandler);
@@ -79,34 +77,27 @@ class OfferMiniServiceTest {
 
     @Test
     void initializeChain_shouldSortAndLinkHandlers() {
-        // When
         offerMiniService.initializeChain();
 
-        // Then
         verify(firstHandler).setNext(secondHandler);
         verify(secondHandler).setNext(thirdHandler);
 
-        // Verify firstHandler is set correctly using reflection
         OfferSearchHandler actualFirstHandler = (OfferSearchHandler) ReflectionTestUtils.getField(offerMiniService, "firstHandler");
         assertThat(actualFirstHandler).isEqualTo(firstHandler);
     }
 
     @Test
     void initializeChain_shouldHandleEmptyHandlers() {
-        // Given
         handlers.clear();
 
-        // When
         offerMiniService.initializeChain();
 
-        // Then - no exceptions should be thrown
         OfferSearchHandler actualFirstHandler = (OfferSearchHandler) ReflectionTestUtils.getField(offerMiniService, "firstHandler");
         assertThat(actualFirstHandler).isNull();
     }
 
     @Test
     void findAllOfferMini_shouldCallHandlerWithCorrectParameters() {
-        // Given
         offerMiniService.initializeChain();
 
         Pageable pageable = PageRequest.of(0, 10);
@@ -120,64 +111,51 @@ class OfferMiniServiceTest {
 
         when(firstHandler.handle(any())).thenReturn(expectedPage);
 
-        // When
         Page<OfferMiniDto> result = offerMiniService.findAllOfferMini(pageable, phrase, minPrice, maxPrice, userId);
 
-        // Then
         assertThat(result).isEqualTo(expectedPage);
         assertThat(result.getContent()).containsExactly(sampleOffer);
 
-        // Verify request parameters
         verify(firstHandler).handle(any(OfferSearchRequest.class));
     }
 
     @Test
     void findAllOfferMini_shouldTrimSearchPhrase() {
-        // Given
         offerMiniService.initializeChain();
 
         Pageable pageable = PageRequest.of(0, 10);
         String phrase = "  test phrase with spaces  ";
         UUID userId = null;
 
-        // Capture the actual request to verify trimming
         when(firstHandler.handle(any())).thenAnswer(invocation -> {
             OfferSearchRequest request = invocation.getArgument(0);
             assertThat(request.getPhrase()).isEqualTo("test phrase with spaces");
             return Page.empty();
         });
 
-        // When
         offerMiniService.findAllOfferMini(pageable, phrase, null, null, userId);
 
-        // Then
         verify(firstHandler).handle(any(OfferSearchRequest.class));
     }
 
     @Test
     void findAllOfferMini_shouldHandleNullFirstHandler() {
-        // Given
         ReflectionTestUtils.setField(offerMiniService, "firstHandler", null);
         Pageable pageable = PageRequest.of(0, 10);
         UUID userId = null;
 
-        // When
         Page<OfferMiniDto> result = offerMiniService.findAllOfferMini(pageable, null, null, null, userId);
 
-        // Then
         assertThat(result).isEmpty();
     }
 
     @Test
     void sortingAliasProcessor_shouldProcessSortingAlias() {
-        // Given
         Sort sort = Sort.by(Sort.Direction.DESC, "price");
         Pageable pageable = PageRequest.of(0, 10, sort);
 
-        // When
         Pageable result = OfferMiniService.sortingAliasProcessor(pageable);
 
-        // Then
         assertThat(result.getPageNumber()).isEqualTo(0);
         assertThat(result.getPageSize()).isEqualTo(10);
         assertThat(result.getSort()).isInstanceOf(JpaSort.class);
@@ -186,33 +164,25 @@ class OfferMiniServiceTest {
 
     @Test
     void sortingAliasProcessor_shouldReturnOriginalPageableForUnsortedPageable() {
-        // Given
         Pageable pageable = PageRequest.of(0, 10);
 
-        // When
         Pageable result = OfferMiniService.sortingAliasProcessor(pageable);
 
-        // Then
         assertThat(result).isSameAs(pageable);
     }
 
     @Test
     void sortingAliasProcessor_shouldReturnOriginalPageableForMultipleSortConditions() {
-        // Given
         Sort sort = Sort.by(Sort.Direction.DESC, "price").and(Sort.by(Sort.Direction.ASC, "year"));
         Pageable pageable = PageRequest.of(0, 10, sort);
 
-        // When
         Pageable result = OfferMiniService.sortingAliasProcessor(pageable);
 
-        // Then
         assertThat(result).isSameAs(pageable);
     }
 
     @Test
     void sortingAliasProcessor_shouldReturnOriginalPageableForInvalidSortFormat() {
-        // Given
-        // Create a mock Sort that will return an invalid format string
         Sort mockSort = mock(Sort.class);
         when(mockSort.isUnsorted()).thenReturn(false);
         when(mockSort.get()).thenReturn(Collections.singletonList(Sort.Order.desc("price")).stream());
@@ -220,10 +190,8 @@ class OfferMiniServiceTest {
 
         Pageable pageable = PageRequest.of(0, 10, mockSort);
 
-        // When
         Pageable result = OfferMiniService.sortingAliasProcessor(pageable);
 
-        // Then
         assertThat(result).isSameAs(pageable);
     }
 }
