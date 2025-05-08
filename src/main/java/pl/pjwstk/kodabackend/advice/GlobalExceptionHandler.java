@@ -2,6 +2,7 @@ package pl.pjwstk.kodabackend.advice;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -24,6 +25,10 @@ class GlobalExceptionHandler {
         return new EntityIssueMessage(ex.getMessage());
     }
 
-
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(AccessDeniedException.class)
+    EntityIssueMessage handleAccessDeniedException(AccessDeniedException ex) {
+        log.warn("Access denied: {}", ex.getMessage());
+        return new EntityIssueMessage("Brak uprawnień do wykonania tej operacji");
+    }
 }
-

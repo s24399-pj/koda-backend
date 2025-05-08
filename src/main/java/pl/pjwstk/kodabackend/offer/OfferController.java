@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.pjwstk.kodabackend.offer.model.CreateOfferCommand;
 import pl.pjwstk.kodabackend.offer.model.OfferDto;
@@ -145,4 +146,9 @@ public interface OfferController {
             @Valid @RequestBody CreateOfferCommand createOfferCommand,
             Principal principal
     );
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('USER')")
+    void deleteOffer(@PathVariable UUID id, Principal principal);
 }

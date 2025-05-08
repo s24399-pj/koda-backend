@@ -1,6 +1,8 @@
 package pl.pjwstk.kodabackend.offer.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.pjwstk.kodabackend.exception.EntityNotFoundException;
@@ -16,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OfferService {
@@ -35,7 +38,7 @@ public class OfferService {
 
     @Transactional(readOnly = true)
     public List<String> findOfferNamesByPhrase(String phrase) {
-        return null;
+        return offerRepository.findDistinctTitlesByPhrase(phrase);
     }
 
     @Transactional
@@ -59,4 +62,27 @@ public class OfferService {
         return offerMapper.mapToOfferDto(savedOffer);
     }
 
+
+    @Transactional
+    public void deleteOffer(UUID offerId, String userEmail) {
+        log.info("Attempting to delete offer with ID: {} by user: {}", offerId, userEmail);
+
+        AppUser user = appUserService.getUserByEmail(userEmail);
+
+        Offer offer = offerRepository.findByIdWithDetails(offerId)
+                .orElseThrow(() -> {
+                    log.warn("Attempt to delete non-existent offer with ID: {}", offerId);
+                    return new EntityNotFoundException("Offer not found with id: ", offerId.toString());
+                });
+
+        if (!offer.getSeller().getId().equals(user.getId())) {
+            log.warn("User {} is attempting to delete offer {} belonging to another user",
+                    userEmail, offerId);
+            throw new AccessDeniedException("User is not authorized to delete this offer");
+        }
+
+        log.info("Deleting offer with ID: {}", offerId);
+        offerRepository.delete(offer);
+        log.info("Offer with ID: {} has been successfully deleted", offerId);
+    }
 }
