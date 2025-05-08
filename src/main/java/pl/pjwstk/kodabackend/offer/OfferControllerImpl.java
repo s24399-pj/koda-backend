@@ -1,16 +1,13 @@
 package pl.pjwstk.kodabackend.offer;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.pjwstk.kodabackend.offer.model.CreateOfferCommand;
 import pl.pjwstk.kodabackend.offer.model.OfferDto;
 import pl.pjwstk.kodabackend.offer.model.OfferMiniDto;
@@ -24,6 +21,7 @@ import java.util.UUID;
 
 import static pl.pjwstk.kodabackend.offer.service.OfferMiniService.sortingAliasProcessor;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/offers")
@@ -59,11 +57,21 @@ class OfferControllerImpl implements OfferController {
     }
 
     @PostMapping
-    @ResponseStatus(org.springframework.http.HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('USER')")
     @Override
     public OfferDto createOffer(@Validated @RequestBody CreateOfferCommand createOfferCommand, Principal principal) {
         String userEmail = principal.getName();
         return offerService.createOffer(createOfferCommand, userEmail);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('USER')")
+    @Override
+    public void deleteOffer(@PathVariable UUID id, Principal principal) {
+        log.info("Otrzymano żądanie usunięcia oferty o ID: {}", id);
+        String userEmail = principal.getName();
+        offerService.deleteOffer(id, userEmail);
     }
 }
