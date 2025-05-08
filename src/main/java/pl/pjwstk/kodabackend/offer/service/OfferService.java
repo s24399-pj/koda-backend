@@ -62,38 +62,27 @@ public class OfferService {
         return offerMapper.mapToOfferDto(savedOffer);
     }
 
-    /**
-     * Usuwa ofertę o określonym identyfikatorze.
-     * Tylko właściciel oferty może ją usunąć.
-     *
-     * @param offerId ID oferty do usunięcia
-     * @param userEmail email użytkownika próbującego usunąć ofertę
-     * @throws EntityNotFoundException gdy oferta o podanym ID nie istnieje
-     * @throws AccessDeniedException gdy użytkownik nie jest właścicielem oferty
-     */
+
     @Transactional
     public void deleteOffer(UUID offerId, String userEmail) {
-        log.info("Próba usunięcia oferty o ID: {} przez użytkownika: {}", offerId, userEmail);
+        log.info("Attempting to delete offer with ID: {} by user: {}", offerId, userEmail);
 
-        // Pobierz użytkownika na podstawie emaila
         AppUser user = appUserService.getUserByEmail(userEmail);
 
-        // Pobierz ofertę wraz ze szczegółami
         Offer offer = offerRepository.findByIdWithDetails(offerId)
                 .orElseThrow(() -> {
-                    log.warn("Próba usunięcia nieistniejącej oferty o ID: {}", offerId);
+                    log.warn("Attempt to delete non-existent offer with ID: {}", offerId);
                     return new EntityNotFoundException("Offer not found with id: ", offerId.toString());
                 });
 
-        // Sprawdź, czy użytkownik jest właścicielem oferty
         if (!offer.getSeller().getId().equals(user.getId())) {
-            log.warn("Użytkownik {} próbuje usunąć ofertę {} należącą do innego użytkownika",
+            log.warn("User {} is attempting to delete offer {} belonging to another user",
                     userEmail, offerId);
             throw new AccessDeniedException("User is not authorized to delete this offer");
         }
 
-        log.info("Usuwanie oferty o ID: {}", offerId);
+        log.info("Deleting offer with ID: {}", offerId);
         offerRepository.delete(offer);
-        log.info("Oferta o ID: {} została pomyślnie usunięta", offerId);
+        log.info("Offer with ID: {} has been successfully deleted", offerId);
     }
 }
