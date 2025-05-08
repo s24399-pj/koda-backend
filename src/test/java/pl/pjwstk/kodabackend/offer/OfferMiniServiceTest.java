@@ -29,6 +29,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -65,10 +66,10 @@ class OfferMiniServiceTest {
 
     @BeforeEach
     void setUp() {
-        // Configure handler order
-        when(firstHandler.getOrder()).thenReturn(1);
-        when(secondHandler.getOrder()).thenReturn(2);
-        when(thirdHandler.getOrder()).thenReturn(3);
+        // Configure handler order - używamy lenient() aby uniknąć "unnecessary stubbings"
+        lenient().when(firstHandler.getOrder()).thenReturn(1);
+        lenient().when(secondHandler.getOrder()).thenReturn(2);
+        lenient().when(thirdHandler.getOrder()).thenReturn(3);
 
         // Add handlers to the set
         handlers.add(firstHandler);
@@ -112,6 +113,7 @@ class OfferMiniServiceTest {
         String phrase = "test phrase";
         BigDecimal minPrice = BigDecimal.valueOf(5000);
         BigDecimal maxPrice = BigDecimal.valueOf(15000);
+        UUID userId = null;
 
         List<OfferMiniDto> offers = Collections.singletonList(sampleOffer);
         Page<OfferMiniDto> expectedPage = new PageImpl<>(offers, pageable, offers.size());
@@ -119,7 +121,7 @@ class OfferMiniServiceTest {
         when(firstHandler.handle(any())).thenReturn(expectedPage);
 
         // When
-        Page<OfferMiniDto> result = offerMiniService.findAllOfferMini(pageable, phrase, minPrice, maxPrice);
+        Page<OfferMiniDto> result = offerMiniService.findAllOfferMini(pageable, phrase, minPrice, maxPrice, userId);
 
         // Then
         assertThat(result).isEqualTo(expectedPage);
@@ -136,6 +138,7 @@ class OfferMiniServiceTest {
 
         Pageable pageable = PageRequest.of(0, 10);
         String phrase = "  test phrase with spaces  ";
+        UUID userId = null;
 
         // Capture the actual request to verify trimming
         when(firstHandler.handle(any())).thenAnswer(invocation -> {
@@ -145,7 +148,7 @@ class OfferMiniServiceTest {
         });
 
         // When
-        offerMiniService.findAllOfferMini(pageable, phrase, null, null);
+        offerMiniService.findAllOfferMini(pageable, phrase, null, null, userId);
 
         // Then
         verify(firstHandler).handle(any(OfferSearchRequest.class));
@@ -156,9 +159,10 @@ class OfferMiniServiceTest {
         // Given
         ReflectionTestUtils.setField(offerMiniService, "firstHandler", null);
         Pageable pageable = PageRequest.of(0, 10);
+        UUID userId = null;
 
         // When
-        Page<OfferMiniDto> result = offerMiniService.findAllOfferMini(pageable, null, null, null);
+        Page<OfferMiniDto> result = offerMiniService.findAllOfferMini(pageable, null, null, null, userId);
 
         // Then
         assertThat(result).isEmpty();
