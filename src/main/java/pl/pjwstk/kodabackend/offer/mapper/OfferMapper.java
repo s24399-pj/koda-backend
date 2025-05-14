@@ -49,8 +49,11 @@ public class OfferMapper {
 
         String profilePictureBase64 = null;
         if (seller.getProfilePicture() != null && seller.getProfilePicture().length > 0) {
-            profilePictureBase64 = "data:image/jpeg;base64," +
-                    Base64.getEncoder().encodeToString(seller.getProfilePicture());
+            try {
+                profilePictureBase64 = Base64.getEncoder().encodeToString(seller.getProfilePicture());
+            } catch (Exception e) {
+                // Jeśli wystąpi problem z konwersją, pozostawiamy null
+            }
         }
 
         return new UserDto(
