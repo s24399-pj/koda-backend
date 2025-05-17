@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.pjwstk.kodabackend.chat.dto.ChatMessageDto;
+import pl.pjwstk.kodabackend.chat.dto.ConversationDto;
 import pl.pjwstk.kodabackend.chat.service.ChatService;
 import pl.pjwstk.kodabackend.security.user.persistance.entity.AppUser;
 
@@ -56,5 +57,12 @@ public class ChatRestController {
 
         chatService.markMessageAsDelivered(messageId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/conversations")
+    public ResponseEntity<List<ConversationDto>> getUserConversations(Authentication authentication) {
+        AppUser currentUser = (AppUser) authentication.getPrincipal();
+        List<ConversationDto> conversations = chatService.getUserConversations(currentUser.getId());
+        return ResponseEntity.ok(conversations);
     }
 }
