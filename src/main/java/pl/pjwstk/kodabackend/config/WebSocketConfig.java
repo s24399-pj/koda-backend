@@ -1,6 +1,7 @@
 package pl.pjwstk.kodabackend.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -30,6 +31,9 @@ class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     private final JwtService jwtService;
     private final AppUserService userService;
 
+    @Value("${koda.frontend.url}")
+    private String frontendUrl;
+
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         config.enableSimpleBroker("/topic", "/queue");
@@ -39,7 +43,7 @@ class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws").setAllowedOrigins("*").withSockJS();
+        registry.addEndpoint("/ws").setAllowedOrigins(frontendUrl).withSockJS();
     }
 
     @Override
