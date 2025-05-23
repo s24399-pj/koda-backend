@@ -15,7 +15,7 @@ import java.util.UUID;
 public class ConversationDto {
     private UUID userId;
     private String userName;
-    private String profilePicture; // Base64 lub URL
+    private String profilePicture;
     private String lastMessage;
     private LocalDateTime lastMessageDate;
     private int unreadCount;

@@ -57,33 +57,6 @@ public class ChatService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
-    public void markMessageAsDelivered(UUID messageId) {
-        ChatMessage message = chatMessageRepository.findById(messageId)
-                .orElseThrow(() -> new EntityNotFoundException(ChatMessage.class.getName(), "Wiadomość nie istnieje"));
-
-        message.setStatus(MessageStatus.DELIVERED);
-        chatMessageRepository.save(message);
-    }
-
-    @Transactional
-    public void markMessageAsRead(UUID messageId) {
-        ChatMessage message = chatMessageRepository.findById(messageId)
-                .orElseThrow(() -> new EntityNotFoundException(ChatMessage.class.getName(), "Wiadomość nie istnieje"));
-
-        message.setStatus(MessageStatus.READ);
-        chatMessageRepository.save(message);
-    }
-
-    @Transactional(readOnly = true)
-    public List<ChatMessageDto> getUnreadMessages(UUID userId) {
-        List<ChatMessage> unreadMessages = chatMessageRepository
-                .findByRecipientIdAndStatus(userId, MessageStatus.SENT);
-
-        return unreadMessages.stream()
-                .map(chatMessageMapper::toDto)
-                .collect(Collectors.toList());
-    }
 
     @Transactional(readOnly = true)
     public List<ConversationDto> getUserConversations(UUID userId) {

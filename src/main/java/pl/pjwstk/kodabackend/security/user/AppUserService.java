@@ -14,6 +14,8 @@ import pl.pjwstk.kodabackend.security.user.persistance.entity.AppUser;
 import pl.pjwstk.kodabackend.security.user.persistance.entity.Role;
 import pl.pjwstk.kodabackend.security.user.persistance.repository.AppUserRepository;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class AppUserService {
@@ -56,8 +58,15 @@ public class AppUserService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
     public AppUser getUserByEmail(String email) {
         return appUserRepository.findByEmail(email)
+                .orElseThrow(() -> new BadCredentialsException("User not found"));
+    }
+
+    @Transactional(readOnly = true)
+    public AppUser getUserById(UUID userId) {
+        return appUserRepository.findById(userId)
                 .orElseThrow(() -> new BadCredentialsException("User not found"));
     }
 

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.lang.NonNull;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.config.ChannelRegistration;
@@ -48,31 +49,41 @@ class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(new ChannelInterceptor() {
-            @Override
-            public Message<?> preSend(Message<?> message, MessageChannel channel) {
-                StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+        registration.interceptors(new JwtAuthenticationInterceptor());
+    }
 
-                if (StompCommand.CONNECT.equals(accessor.getCommand())) {
-                    String authHeader = accessor.getFirstNativeHeader("Authorization");
-                    if (authHeader != null && authHeader.startsWith("Bearer ")) {
-                        String token = authHeader.substring(7);
-                        String userEmail = jwtService.extractUsername(token);
+    private class JwtAuthenticationInterceptor implements ChannelInterceptor {
+        @Override
+        public Message<?> preSend(@NonNull Message<?> message, @NonNull MessageChannel channel) {
+            StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
 
-                        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                            AppUser user = userService.getUserByEmail(userEmail);
-
-                            if (jwtService.isTokenValid(token, user)) {
-                                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-
-                                SecurityContextHolder.getContext().setAuthentication(authToken);
-                                accessor.setUser(authToken);
-                            }
-                        }
-                    }
-                }
-                return message;
+            if (accessor != null && StompCommand.CONNECT.equals(accessor.getCommand())) {
+                authenticateUser(accessor);
             }
-        });
+            return message;
+        }
+
+        private void authenticateUser(@NonNull StompHeaderAccessor accessor) {
+            String authHeader = accessor.getFirstNativeHeader("Authorization");
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                processJwtToken(authHeader.substring(7), accessor);
+            }
+        }
+
+        private void processJwtToken(String token, @NonNull StompHeaderAccessor accessor) {
+            String userEmail = jwtService.extractUsername(token);
+
+            if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                AppUser user = userService.getUserByEmail(userEmail);
+
+                if (user != null && jwtService.isTokenValid(token, user)) {
+                    UsernamePasswordAuthenticationToken authToken =
+                            new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                    accessor.setUser(authToken);
+                }
+            }
+        }
     }
 }
