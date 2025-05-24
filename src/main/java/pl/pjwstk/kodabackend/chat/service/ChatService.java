@@ -19,7 +19,6 @@ import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -54,7 +53,7 @@ public class ChatService {
         List<ChatMessage> messages = chatMessageRepository.findChatMessages(senderId, recipientId);
         return messages.stream()
                 .map(chatMessageMapper::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
 
@@ -70,7 +69,7 @@ public class ChatService {
             List<ChatMessage> recentMessages = chatMessageRepository.findMessagesByConversation(
                     userId, partnerId, PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "createdAt")));
 
-            ChatMessage lastMessage = recentMessages.isEmpty() ? null : recentMessages.get(0);
+            ChatMessage lastMessage = recentMessages.isEmpty() ? null : recentMessages.getFirst();
 
             int unreadCount = chatMessageRepository.countUnreadMessagesInConversation(userId, partnerId);
 
@@ -84,7 +83,7 @@ public class ChatService {
                     .lastMessageDate(lastMessage != null ? lastMessage.getCreatedAt() : null)
                     .unreadCount(unreadCount)
                     .build();
-        }).collect(Collectors.toList());
+        }).toList();
     }
 
     private String convertProfilePictureToBase64(byte[] profilePicture) {

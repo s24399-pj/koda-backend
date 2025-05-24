@@ -17,7 +17,6 @@ import pl.pjwstk.kodabackend.security.user.persistance.repository.AppUserReposit
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
