@@ -7,11 +7,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.pjwstk.kodabackend.security.user.model.AppUserDto;
+import pl.pjwstk.kodabackend.security.user.model.UserMiniDto;
 import pl.pjwstk.kodabackend.security.user.persistance.entity.AppUser;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -64,4 +67,16 @@ class UserInternalControllerImpl implements UserInternalController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PreAuthorize("hasAuthority('user:read')")
+    @GetMapping("/search")
+    public ResponseEntity<List<UserMiniDto>> searchUsers(@RequestParam String query) {
+        if (query == null || query.trim().isEmpty()) {
+            return ResponseEntity.ok(List.of());
+        }
+
+        List<UserMiniDto> users = appUserService.searchUsers(query.trim());
+        return ResponseEntity.ok(users);
+    }
+
 }

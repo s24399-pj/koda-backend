@@ -10,11 +10,14 @@ import pl.pjwstk.kodabackend.security.token.JwtService;
 import pl.pjwstk.kodabackend.security.user.model.AuthenticationResponse;
 import pl.pjwstk.kodabackend.security.user.model.CreateUserCommand;
 import pl.pjwstk.kodabackend.security.user.model.LoginRequest;
+import pl.pjwstk.kodabackend.security.user.model.UserMiniDto;
 import pl.pjwstk.kodabackend.security.user.persistance.entity.AppUser;
 import pl.pjwstk.kodabackend.security.user.persistance.entity.Role;
 import pl.pjwstk.kodabackend.security.user.persistance.repository.AppUserRepository;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -68,6 +71,20 @@ public class AppUserService {
     public AppUser getUserById(UUID userId) {
         return appUserRepository.findById(userId)
                 .orElseThrow(() -> new BadCredentialsException("User not found"));
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserMiniDto> searchUsers(String query) {
+        List<AppUser> users = appUserRepository.searchUsers(query);
+
+        return users.stream()
+                .map(user -> UserMiniDto.builder()
+                        .id(user.getId())
+                        .firstName(user.getFirstName())
+                        .lastName(user.getLastName())
+                        .fullName(user.getFirstName() + " " + user.getLastName())
+                        .build())
+                .toList();
     }
 
 }
