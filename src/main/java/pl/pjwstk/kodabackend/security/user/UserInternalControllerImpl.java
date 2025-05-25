@@ -43,6 +43,7 @@ class UserInternalControllerImpl implements UserInternalController {
                 .build();
     }
 
+    @Override
     @PreAuthorize("hasAuthority('user:read')")
     @GetMapping("/{userId}/profile")
     public ResponseEntity<AppUserDto> getUserProfileById(@PathVariable UUID userId) {
@@ -68,6 +69,7 @@ class UserInternalControllerImpl implements UserInternalController {
         }
     }
 
+    @Override
     @PreAuthorize("hasAuthority('user:read')")
     @GetMapping("/search")
     public ResponseEntity<List<UserMiniDto>> searchUsers(@RequestParam String query) {
