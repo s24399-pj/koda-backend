@@ -1,4 +1,4 @@
-package pl.pjwstk.kodabackend.offer.model;
+package pl.pjwstk.kodabackend.offer.model.command;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMin;
@@ -20,6 +20,8 @@ import pl.pjwstk.kodabackend.offer.persistance.entity.VehicleCondition;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -97,6 +99,10 @@ public class CreateOfferCommand {
 
     @Valid
     private CarEquipmentDto equipment;
+
+    // DODANE POLE DLA ZDJĘĆ
+    @Size(max = 10, message = "Można dodać maksymalnie 10 zdjęć")
+    private List<UUID> images;
 
     @Data
     @NoArgsConstructor
