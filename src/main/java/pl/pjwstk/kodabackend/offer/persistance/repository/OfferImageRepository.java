@@ -17,5 +17,4 @@ public interface OfferImageRepository extends JpaRepository<OfferImage, UUID> {
     @Query("SELECT COUNT(oi) FROM OfferImage oi WHERE oi.offer.id = :offerId")
     int countByOfferId(@Param("offerId") UUID offerId);
 
-    List<OfferImage> findByOfferIdAndIsPrimaryTrue(UUID offerId);
 }
