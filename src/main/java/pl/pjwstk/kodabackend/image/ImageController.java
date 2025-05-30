@@ -20,7 +20,45 @@ public interface ImageController {
 
     @Operation(
             summary = "Upload multiple images",
-            description = "Uploads multiple images for offers. Maximum 10 images, each up to 5MB."
+            description = "Uploads multiple images for a specific offer. Maximum 10 images, each up to 5MB."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully uploaded images",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = List.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid file format or size",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Offer not found",
+                    content = @Content
+            )
+    })
+    @PostMapping(value = "/{offerId}/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    List<ImageUploadResponse> uploadImages(
+            @Parameter(description = "Offer UUID", required = true)
+            @PathVariable UUID offerId,
+            @Parameter(description = "Image files to upload", required = true)
+            @RequestParam("images") MultipartFile[] files,
+            Principal principal
+    );
+
+    @Operation(
+            summary = "Upload multiple images",
+            description = "Uploads multiple images without specific offer. Maximum 10 images, each up to 5MB."
     )
     @ApiResponses(value = {
             @ApiResponse(

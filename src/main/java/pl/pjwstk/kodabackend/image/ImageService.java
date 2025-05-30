@@ -10,8 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import pl.pjwstk.kodabackend.exception.BadRequestException;
 import pl.pjwstk.kodabackend.exception.NotFoundException;
+import pl.pjwstk.kodabackend.offer.persistance.entity.Offer;
 import pl.pjwstk.kodabackend.offer.persistance.entity.OfferImage;
 import pl.pjwstk.kodabackend.offer.persistance.repository.OfferImageRepository;
+import pl.pjwstk.kodabackend.offer.persistance.repository.OfferRepository;
 import pl.pjwstk.kodabackend.security.user.persistance.entity.AppUser;
 import pl.pjwstk.kodabackend.security.user.persistance.repository.AppUserRepository;
 
@@ -30,6 +32,7 @@ public class ImageService {
 
     private final OfferImageRepository offerImageRepository;
     private final AppUserRepository appUserRepository;
+    private final OfferRepository offerRepository;
     private final ResourceLoader resourceLoader;
 
     @Value("${koda.upload.dir:classpath:offer-images/}")
@@ -45,6 +48,70 @@ public class ImageService {
     private static final Set<String> ALLOWED_MIME_TYPES = Set.of(
             "image/jpeg", "image/png", "image/webp"
     );
+
+    @Transactional
+    public List<ImageUploadResponse> uploadImages(MultipartFile[] files, UUID offerId, String userEmail) {
+        log.info("Rozpoczęcie uploadu {} plików dla oferty {} przez użytkownika: {}",
+                files.length, offerId, userEmail);
+        validateUploadRequest(files);
+
+        AppUser user = appUserRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new NotFoundException("Użytkownik nie został znaleziony"));
+
+        Offer offer = offerRepository.findById(offerId)
+                .orElseThrow(() -> new NotFoundException("Oferta nie została znaleziona"));
+
+        if (!offer.getSeller().getId().equals(user.getId())) {
+            throw new BadRequestException("Nie masz uprawnień do dodawania zdjęć do tej oferty");
+        }
+
+        int existingImagesCount = offerImageRepository.countByOfferId(offerId);
+        int nextSortOrder = existingImagesCount + 1;
+
+        List<ImageUploadResponse> responses = new ArrayList<>();
+
+        for (int i = 0; i < files.length; i++) {
+            MultipartFile file = files[i];
+            try {
+                log.debug("Przetwarzanie pliku {}/{}: {}", i + 1, files.length, file.getOriginalFilename());
+
+                String savedFilename = saveFile(file);
+                String fileUrl = "/api/v1/images/view/" + savedFilename;
+
+                boolean isFirstImageOverall = existingImagesCount == 0 && i == 0;
+
+                OfferImage offerImage = OfferImage.builder()
+                        .url(fileUrl)
+                        .caption(file.getOriginalFilename())
+                        .isPrimary(isFirstImageOverall)
+                        .sortOrder(nextSortOrder + i)
+                        .offer(offer)
+                        .build();
+
+                OfferImage saved = offerImageRepository.save(offerImage);
+
+                responses.add(ImageUploadResponse.builder()
+                        .id(saved.getId())
+                        .url(saved.getUrl())
+                        .filename(file.getOriginalFilename())
+                        .size(file.getSize())
+                        .contentType(file.getContentType())
+                        .sortOrder(saved.getSortOrder())
+                        .build());
+
+                log.info("Zapisano zdjęcie: {} (ID: {}) dla oferty: {} użytkownika: {}",
+                        savedFilename, saved.getId(), offerId, userEmail);
+
+            } catch (IOException e) {
+                log.error("Błąd podczas zapisywania pliku: {} - {}", file.getOriginalFilename(), e.getMessage());
+                throw new BadRequestException("Błąd podczas zapisywania pliku: " + file.getOriginalFilename());
+            }
+        }
+
+        log.info("Zakończono upload {} plików dla oferty {}. Utworzono {} rekordów.",
+                files.length, offerId, responses.size());
+        return responses;
+    }
 
     @Transactional
     public List<ImageUploadResponse> uploadImages(MultipartFile[] files, String userEmail) {
@@ -66,8 +133,9 @@ public class ImageService {
 
                 OfferImage offerImage = OfferImage.builder()
                         .url(fileUrl)
-                        .isPrimary(i == 0) // Pierwsze zdjęcie jako główne
-                        .sortOrder(i)
+                        .caption(file.getOriginalFilename())
+                        .isPrimary(i == 0)
+                        .sortOrder(i + 1)
                         .build();
 
                 OfferImage saved = offerImageRepository.save(offerImage);

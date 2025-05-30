@@ -26,7 +26,6 @@ public class LikedOfferController {
     @GetMapping("/liked")
     public ResponseEntity<List<OfferDto>> getLikedOffers() {
         UUID userId = getCurrentUserId();
-        log.info("Getting liked offers for user: {}", userId);
         List<OfferDto> likedOffers = likedOfferService.getLikedOffersByUserId(userId);
         return ResponseEntity.ok(likedOffers);
     }
@@ -34,7 +33,6 @@ public class LikedOfferController {
     @GetMapping("/{offerId}/liked")
     public ResponseEntity<Boolean> isOfferLiked(@PathVariable UUID offerId) {
         UUID userId = getCurrentUserId();
-        log.info("Checking if offer {} is liked by user {}", offerId, userId);
         boolean isLiked = likedOfferService.isOfferLikedByUser(userId, offerId);
         return ResponseEntity.ok(isLiked);
     }
@@ -42,7 +40,6 @@ public class LikedOfferController {
     @PostMapping("/{offerId}/like")
     public ResponseEntity<Void> likeOffer(@PathVariable UUID offerId) {
         UUID userId = getCurrentUserId();
-        log.info("Adding offer {} to favorites for user {}", offerId, userId);
         likedOfferService.likeOffer(userId, offerId);
         return ResponseEntity.ok().build();
     }
@@ -58,7 +55,6 @@ public class LikedOfferController {
     @PostMapping("/{offerId}/toggle")
     public ResponseEntity<Void> toggleLikedOffer(@PathVariable UUID offerId) {
         UUID userId = getCurrentUserId();
-        log.info("Toggling like status for offer {} for user {}", offerId, userId);
         likedOfferService.toggleLikedOffer(userId, offerId);
         return ResponseEntity.ok().build();
     }
@@ -66,7 +62,6 @@ public class LikedOfferController {
     private UUID getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        log.debug("Getting user ID for email: {}", email);
         AppUser user = appUserService.getUserByEmail(email);
         return user.getId();
     }

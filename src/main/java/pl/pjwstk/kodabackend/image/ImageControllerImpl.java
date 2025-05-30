@@ -21,6 +21,18 @@ class ImageControllerImpl implements ImageController {
 
     private final ImageService imageService;
 
+    @PostMapping(value = "/{offerId}/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('USER')")
+    @Override
+    public List<ImageUploadResponse> uploadImages(@PathVariable UUID offerId,
+                                                  @RequestParam("images") MultipartFile[] files,
+                                                  Principal principal) {
+        String userEmail = principal.getName();
+        log.info("Otrzymano żądanie uploadu {} plików dla oferty {} od użytkownika: {}",
+                files.length, offerId, userEmail);
+        return imageService.uploadImages(files, offerId, userEmail);
+    }
+
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('USER')")
     @Override

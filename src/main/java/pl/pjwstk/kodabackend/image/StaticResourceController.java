@@ -20,7 +20,6 @@ import java.nio.file.Paths;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/images")
-@CrossOrigin(origins = "*", maxAge = 3600)
 public class StaticResourceController {
 
     private final ResourceLoader resourceLoader;
@@ -30,7 +29,6 @@ public class StaticResourceController {
     private String uploadDir;
 
     @GetMapping("/view/{filename}")
-    @CrossOrigin(origins = "*")
     public ResponseEntity<Resource> viewImage(@PathVariable String filename) {
         try {
             log.debug("Żądanie wyświetlenia zdjęcia: {}", filename);
@@ -74,15 +72,12 @@ public class StaticResourceController {
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_TYPE, contentType)
                     .header(HttpHeaders.CACHE_CONTROL, "public, max-age=3600")
-                    .header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*") // Explicite CORS
                     .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"")
                     .body(resource);
 
         } catch (Exception e) {
             log.error("Błąd podczas serwowania pliku: {}", filename, e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")
-                    .build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -108,15 +103,6 @@ public class StaticResourceController {
         }
     }
 
-    @RequestMapping(value = "/view/{filename}", method = RequestMethod.OPTIONS)
-    public ResponseEntity<?> handleOptionsRequest(@PathVariable String filename) {
-        return ResponseEntity.ok()
-                .header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")
-                .header(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "GET, OPTIONS")
-                .header(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "*")
-                .header(HttpHeaders.ACCESS_CONTROL_MAX_AGE, "3600")
-                .build();
-    }
 
     private String getContentTypeByExtension(String filename) {
         if (filename == null) {
