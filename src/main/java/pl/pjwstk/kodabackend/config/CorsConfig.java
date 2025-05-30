@@ -20,9 +20,7 @@ public class CorsConfig {
                 registry.addMapping("/api/**")
                         .allowedOrigins(
                                 frontendUrl,
-                                "http://localhost:5173",
-                                "http://localhost:3000",
-                                "http://localhost:5174"
+                                "http://localhost:5173"
                         )
                         .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                         .allowedHeaders("*")

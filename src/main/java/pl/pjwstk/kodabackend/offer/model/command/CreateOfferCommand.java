@@ -100,7 +100,6 @@ public class CreateOfferCommand {
     @Valid
     private CarEquipmentDto equipment;
 
-    // DODANE POLE DLA ZDJĘĆ
     @Size(max = 10, message = "Można dodać maksymalnie 10 zdjęć")
     private List<UUID> images;
 
