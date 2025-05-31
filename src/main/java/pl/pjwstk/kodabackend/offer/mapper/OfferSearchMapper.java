@@ -1,40 +1,39 @@
 package pl.pjwstk.kodabackend.offer.mapper;
 
 import org.springframework.stereotype.Component;
-import pl.pjwstk.kodabackend.offer.model.AdvancedOfferSearchRequest;
+import pl.pjwstk.kodabackend.offer.model.AdvancedSearchRequest;
 import pl.pjwstk.kodabackend.offer.model.SearchFiltersDto;
+import pl.pjwstk.kodabackend.offer.persistance.entity.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Component
 public class OfferSearchMapper {
 
-    public AdvancedOfferSearchRequest mapToAdvancedRequest(SearchFiltersDto dto) {
+    public AdvancedSearchRequest mapToAdvancedRequest(SearchFiltersDto dto) {
         if (dto == null) {
-            return new AdvancedOfferSearchRequest();
+            return new AdvancedSearchRequest();
         }
 
-        return AdvancedOfferSearchRequest.builder()
-                .searchTerm(dto.getSearchTerm())
+        return AdvancedSearchRequest.builder()
+                .phrase(dto.getSearchTerm())
                 .brand(dto.getBrand())
                 .model(dto.getModel())
-                .priceFrom(parseToDecimal(dto.getPriceFrom()))
-                .priceTo(parseToDecimal(dto.getPriceTo()))
-                .currency(dto.getCurrency())
-                .yearFrom(parseToInteger(dto.getYearFrom()))
-                .yearTo(parseToInteger(dto.getYearTo()))
-                .mileageFrom(parseToInteger(dto.getMileageFrom()))
-                .mileageTo(parseToInteger(dto.getMileageTo()))
-                .location(dto.getLocation())
-                .fuelType(dto.getFuelType())
-                .transmission(dto.getTransmission())
-                .bodyType(dto.getBodyType())
-                .driveType(dto.getDriveType())
-                .condition(dto.getCondition())
-                .enginePowerFrom(parseToInteger(dto.getEnginePowerFrom()))
-                .enginePowerTo(parseToInteger(dto.getEnginePowerTo()))
-                .doors(parseToInteger(dto.getDoors()))
-                .seats(parseToInteger(dto.getSeats()))
+                .minPrice(parseToDecimal(dto.getPriceFrom()))
+                .maxPrice(parseToDecimal(dto.getPriceTo()))
+                .minYear(parseToInteger(dto.getYearFrom()))
+                .maxYear(parseToInteger(dto.getYearTo()))
+                .minMileage(parseToInteger(dto.getMileageFrom()))
+                .maxMileage(parseToInteger(dto.getMileageTo()))
+                .fuelType(getFirstValueFromList(dto.getFuelType()))
+                .transmission(getFirstValueFromList(dto.getTransmission()))
+                .bodyType(getFirstValueFromList(dto.getBodyType()))
+                .driveType(getFirstValueFromList(dto.getDriveType()))
+                .condition(getFirstValueFromList(dto.getCondition()))
+                .minEnginePower(parseToInteger(dto.getEnginePowerFrom()))
+                .maxEnginePower(parseToInteger(dto.getEnginePowerTo()))
+                // Equipment fields
                 .airConditioning(dto.getEquipment() != null ? dto.getEquipment().getAirConditioning() : null)
                 .automaticClimate(dto.getEquipment() != null ? dto.getEquipment().getAutomaticClimate() : null)
                 .heatedSeats(dto.getEquipment() != null ? dto.getEquipment().getHeatedSeats() : null)
@@ -46,6 +45,14 @@ public class OfferSearchMapper {
                 .xenonLights(dto.getEquipment() != null ? dto.getEquipment().getXenonLights() : null)
                 .ledLights(dto.getEquipment() != null ? dto.getEquipment().getLedLights() : null)
                 .build();
+    }
+
+    // Helper method to extract the first element from a list
+    private <T> T getFirstValueFromList(List<T> list) {
+        if (list == null || list.isEmpty()) {
+            return null;
+        }
+        return list.get(0);
     }
 
     private BigDecimal parseToDecimal(String value) {
