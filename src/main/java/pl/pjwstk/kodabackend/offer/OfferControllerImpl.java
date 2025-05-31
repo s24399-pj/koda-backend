@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import pl.pjwstk.kodabackend.offer.model.CreateOfferCommand;
+import pl.pjwstk.kodabackend.offer.model.command.CreateOfferCommand;
 import pl.pjwstk.kodabackend.offer.model.OfferDto;
 import pl.pjwstk.kodabackend.offer.model.OfferMiniDto;
 import pl.pjwstk.kodabackend.offer.service.OfferMiniService;
