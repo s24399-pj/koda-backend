@@ -1,4 +1,4 @@
-package pl.pjwstk.kodabackend.image;
+package pl.pjwstk.kodabackend.image.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

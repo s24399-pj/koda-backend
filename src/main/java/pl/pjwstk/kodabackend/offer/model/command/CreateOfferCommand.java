@@ -29,19 +29,19 @@ import java.util.UUID;
 @AllArgsConstructor
 public class CreateOfferCommand {
 
-    @NotBlank(message = "Tytuł jest wymagany")
-    @Size(min = 3, max = 100, message = "Tytuł musi mieć między 3 a 100 znaków")
+    @NotBlank(message = "Title is required")
+    @Size(min = 3, max = 100, message = "Title must be between 3 and 100 characters")
     private String title;
 
-    @NotBlank(message = "Opis jest wymagany")
-    @Size(min = 10, max = 2000, message = "Opis musi mieć między 10 a 2000 znaków")
+    @NotBlank(message = "Description is required")
+    @Size(min = 10, max = 2000, message = "Description must be between 10 and 2000 characters")
     private String description;
 
-    @NotNull(message = "Cena jest wymagana")
-    @DecimalMin(value = "0.01", message = "Cena musi być większa od 0")
+    @NotNull(message = "Price is required")
+    @DecimalMin(value = "0.01", message = "Price must be greater than 0")
     private BigDecimal price;
 
-    @NotBlank(message = "Waluta jest wymagana")
+    @NotBlank(message = "Currency is required")
     private String currency;
 
     private boolean negotiable = true;
@@ -50,28 +50,28 @@ public class CreateOfferCommand {
     private String location;
 
     @Pattern(regexp = "^[+]?[(]?[0-9]{3}[)]?[-\\s.]?[0-9]{3}[-\\s.]?[0-9]{4,6}$",
-            message = "Niepoprawny format numeru telefonu")
+            message = "Invalid phone number format")
     private String contactPhone;
 
-    @Email(message = "Niepoprawny format adresu email")
+    @Email(message = "Invalid email format")
     private String contactEmail;
 
-    @Future(message = "Data wygaśnięcia musi być w przyszłości")
+    @Future(message = "Expiration date must be in the future")
     private LocalDateTime expirationDate;
 
-    @NotBlank(message = "Marka jest wymagana")
+    @NotBlank(message = "Brand is required")
     private String brand;
 
-    @NotBlank(message = "Model jest wymagany")
+    @NotBlank(message = "Model is required")
     private String model;
 
-    @NotNull(message = "Rok produkcji jest wymagany")
+    @NotNull(message = "Production year is required")
     private Integer year;
 
     private String color;
     private String displacement;
 
-    @Pattern(regexp = "^[A-HJ-NPR-Z0-9]{17}$", message = "Niepoprawny format numeru VIN")
+    @Pattern(regexp = "^[A-HJ-NPR-Z0-9]{17}$", message = "Invalid VIN number format")
     private String vin;
 
     private Integer mileage;
@@ -94,13 +94,13 @@ public class CreateOfferCommand {
     private Boolean accidentFree;
     private Boolean serviceHistory;
 
-    @Size(max = 1000, message = "Dodatkowe wyposażenie nie może przekraczać 1000 znaków")
+    @Size(max = 1000, message = "Additional features cannot exceed 1000 characters")
     private String additionalFeatures;
 
     @Valid
     private CarEquipmentDto equipment;
 
-    @Size(max = 10, message = "Można dodać maksymalnie 10 zdjęć")
+    @Size(min = 1, max = 10, message = "You can add between 1 and 10 images")
     private List<UUID> images;
 
     @Data

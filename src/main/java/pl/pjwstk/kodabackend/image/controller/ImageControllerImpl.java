@@ -1,4 +1,4 @@
-package pl.pjwstk.kodabackend.image;
+package pl.pjwstk.kodabackend.image.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import pl.pjwstk.kodabackend.image.dto.ImageUploadResponse;
+import pl.pjwstk.kodabackend.image.service.ImageService;
+import pl.pjwstk.kodabackend.image.service.ImageStatsService;
 
 import java.security.Principal;
 import java.util.List;
@@ -28,7 +31,7 @@ class ImageControllerImpl implements ImageController {
                                                   @RequestParam("images") MultipartFile[] files,
                                                   Principal principal) {
         String userEmail = principal.getName();
-        log.info("Otrzymano żądanie uploadu {} plików dla oferty {} od użytkownika: {}",
+        log.info("Received upload request for {} files for offer {} from user: {}",
                 files.length, offerId, userEmail);
         return imageService.uploadImages(files, offerId, userEmail);
     }
@@ -39,7 +42,7 @@ class ImageControllerImpl implements ImageController {
     public List<ImageUploadResponse> uploadImages(@RequestParam("images") MultipartFile[] files,
                                                   Principal principal) {
         String userEmail = principal.getName();
-        log.info("Otrzymano żądanie uploadu {} plików od użytkownika: {}", files.length, userEmail);
+        log.info("Received upload request for {} files from user: {}", files.length, userEmail);
         return imageService.uploadImages(files, userEmail);
     }
 
@@ -49,13 +52,13 @@ class ImageControllerImpl implements ImageController {
     @Override
     public void deleteImage(@PathVariable UUID imageId, Principal principal) {
         String userEmail = principal.getName();
-        log.info("Otrzymano żądanie usunięcia zdjęcia {} od użytkownika: {}", imageId, userEmail);
+        log.info("Received delete request for image {} from user: {}", imageId, userEmail);
         imageService.deleteImage(imageId, userEmail);
     }
 
     @GetMapping("/stats")
     @PreAuthorize("hasRole('ADMIN')")
-    public ImageService.UploadStats getUploadStats() {
+    public ImageStatsService.UploadStats getUploadStats() {
         return imageService.getUploadStats();
     }
 
@@ -63,6 +66,6 @@ class ImageControllerImpl implements ImageController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> cleanupUnusedFiles() {
         int deletedCount = imageService.cleanupUnusedFiles();
-        return ResponseEntity.ok("Usunięto " + deletedCount + " nieużywanych plików");
+        return ResponseEntity.ok("Deleted " + deletedCount + " unused files");
     }
 }

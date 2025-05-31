@@ -11,7 +11,7 @@ import org.springframework.web.multipart.support.StandardServletMultipartResolve
 import jakarta.servlet.MultipartConfigElement;
 
 @Configuration
-public class FileUploadConfig {
+class FileUploadConfig {
 
     @Value("${koda.upload.max-file-size:5242880}") // 5MB
     private long maxFileSize;
@@ -20,7 +20,7 @@ public class FileUploadConfig {
     private long maxRequestSize;
 
     @Bean
-    public MultipartConfigElement multipartConfigElement() {
+    MultipartConfigElement multipartConfigElement() { // package-private zamiast public
         MultipartConfigFactory factory = new MultipartConfigFactory();
         factory.setMaxFileSize(DataSize.ofBytes(maxFileSize));
         factory.setMaxRequestSize(DataSize.ofBytes(maxRequestSize));
@@ -28,7 +28,7 @@ public class FileUploadConfig {
     }
 
     @Bean
-    public MultipartResolver multipartResolver() {
+    MultipartResolver multipartResolver() { // package-private zamiast public
         return new StandardServletMultipartResolver();
     }
 }

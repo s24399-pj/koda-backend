@@ -47,7 +47,6 @@ public class LikedOfferController {
     @PostMapping("/{offerId}/unlike")
     public ResponseEntity<Void> unlikeOffer(@PathVariable UUID offerId) {
         UUID userId = getCurrentUserId();
-        log.info("Removing offer {} from favorites for user {}", offerId, userId);
         likedOfferService.unlikeOffer(userId, offerId);
         return ResponseEntity.ok().build();
     }

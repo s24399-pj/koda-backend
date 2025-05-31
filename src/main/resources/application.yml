@@ -51,17 +51,3 @@ spring:
 
 server:
   port: 8137
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: mappings
-  endpoint:
-    mappings:
-      enabled: true
-
-logging:
-  level:
-    pl.pjwstk.kodabackend.image: DEBUG
-    org.springframework.web.multipart: DEBUG
