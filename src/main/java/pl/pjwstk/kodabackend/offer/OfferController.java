@@ -16,7 +16,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import pl.pjwstk.kodabackend.offer.model.CreateOfferCommand;
+import pl.pjwstk.kodabackend.offer.model.command.CreateOfferCommand;
 import pl.pjwstk.kodabackend.offer.model.OfferDto;
 import pl.pjwstk.kodabackend.offer.model.OfferMiniDto;
 
