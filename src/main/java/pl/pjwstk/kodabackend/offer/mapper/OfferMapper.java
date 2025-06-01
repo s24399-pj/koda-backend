@@ -185,3 +185,4 @@ public class OfferMapper {
 
         return offer;
     }
+}
