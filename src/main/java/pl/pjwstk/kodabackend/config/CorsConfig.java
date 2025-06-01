@@ -17,19 +17,16 @@ class CorsConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins(frontendUrl)
-                        .allowedMethods("GET", "POST", "PATCH", "DELETE")
-                        .allowCredentials(false)
-                        .allowedHeaders("*");
+                // Default API endpoints with authentication
                 registry.addMapping("/api/**")
-                        .allowedOrigins(frontendUrl) 
+                        .allowedOrigins(frontendUrl)
                         .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true)
                         .exposedHeaders("Authorization", "Content-Type", "Access-Control-Allow-Origin")
                         .maxAge(3600);
 
+                // Public image endpoint with broader access
                 registry.addMapping("/api/v1/images/view/**")
                         .allowedOrigins("*")
                         .allowedMethods("GET", "OPTIONS")

@@ -5,7 +5,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 import pl.pjwstk.kodabackend.offer.model.OfferMiniDto;
 import pl.pjwstk.kodabackend.offer.persistance.entity.Offer;
 
@@ -13,7 +12,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
-@Repository
 public interface AdvancedOfferRepository extends JpaRepository<Offer, UUID> {
 
     @Query(value = """
@@ -56,7 +54,6 @@ public interface AdvancedOfferRepository extends JpaRepository<Offer, UUID> {
             Pageable pageable
     );
 
-    // Zapytanie z wyposażeniem (ale bez user JOIN)
     @Query(value = """
         SELECT new pl.pjwstk.kodabackend.offer.model.OfferMiniDto(
             o.id, o.title, o.price,
@@ -88,7 +85,6 @@ public interface AdvancedOfferRepository extends JpaRepository<Offer, UUID> {
             Pageable pageable
     );
 
-    // Metody pomocnicze (te powinny działać)
     @Query("SELECT DISTINCT cd.brand FROM CarDetails cd ORDER BY cd.brand")
     List<String> findAllBrands();
 

@@ -51,163 +51,213 @@ public class AdvancedOfferSearchService {
             Join<Offer, CarDetails> carDetailsJoin = root.join("carDetails", JoinType.INNER);
             Join<CarDetails, CarEquipment> carEquipmentJoin = carDetailsJoin.join("carEquipment", JoinType.INNER);
 
-            // Title or description search
-            if (request.getPhrase() != null && !request.getPhrase().trim().isEmpty()) {
-                String searchPhrase = "%" + request.getPhrase().toLowerCase() + "%";
-                predicates.add(cb.or(
-                        cb.like(cb.lower(root.get("title")), searchPhrase),
-                        cb.like(cb.lower(root.get("description")), searchPhrase)
-                ));
-            }
-
-            // Price range
-            if (request.getMinPrice() != null) {
-                predicates.add(cb.greaterThanOrEqualTo(root.get("price"), request.getMinPrice()));
-            }
-            if (request.getMaxPrice() != null) {
-                predicates.add(cb.lessThanOrEqualTo(root.get("price"), request.getMaxPrice()));
-            }
-
-            // User ID filter
-            if (request.getUserId() != null) {
-                predicates.add(cb.equal(root.get("seller").get("id"), request.getUserId()));
-            }
-
-            // Car Details filters
-            addCarDetailsFilters(request, carDetailsJoin, predicates, cb);
-
-            // Car Equipment filters
-            addCarEquipmentFilters(request, carEquipmentJoin, predicates, cb);
+            // Apply filters in a structured way
+            applyBasicSearchFilters(request, root, predicates, cb);
+            applyCarDetailsFilters(request, carDetailsJoin, predicates, cb);
+            applyCarEquipmentFilters(request, carEquipmentJoin, predicates, cb);
 
             return cb.and(predicates.toArray(new Predicate[0]));
         };
     }
 
-    private void addCarDetailsFilters(AdvancedSearchRequest request, Join<Offer, CarDetails> carDetailsJoin,
-                                      List<Predicate> predicates, jakarta.persistence.criteria.CriteriaBuilder cb) {
-        // Brand filter
-        if (request.getBrand() != null && !request.getBrand().isEmpty()) {
-            predicates.add(cb.equal(carDetailsJoin.get("brand"), request.getBrand()));
+    /**
+     * Apply basic offer filters (title, description, price, user)
+     */
+    private void applyBasicSearchFilters(AdvancedSearchRequest request,
+                                         jakarta.persistence.criteria.Root<Offer> root,
+                                         List<Predicate> predicates,
+                                         jakarta.persistence.criteria.CriteriaBuilder cb) {
+        // Title or description search
+        if (request.getPhrase() != null && !request.getPhrase().trim().isEmpty()) {
+            String searchPhrase = "%" + request.getPhrase().toLowerCase() + "%";
+            predicates.add(cb.or(
+                    cb.like(cb.lower(root.get("title")), searchPhrase),
+                    cb.like(cb.lower(root.get("description")), searchPhrase)
+            ));
         }
 
-        // Model filter
-        if (request.getModel() != null && !request.getModel().isEmpty()) {
-            predicates.add(cb.equal(carDetailsJoin.get("model"), request.getModel()));
-        }
+        // Price range
+        applyRangeFilter(root, predicates, cb, "price", request.getMinPrice(), request.getMaxPrice());
 
-        // Year range
-        if (request.getMinYear() != null) {
-            predicates.add(cb.greaterThanOrEqualTo(carDetailsJoin.get("year"), request.getMinYear()));
+        // User ID filter
+        if (request.getUserId() != null) {
+            predicates.add(cb.equal(root.get("seller").get("id"), request.getUserId()));
         }
-        if (request.getMaxYear() != null) {
-            predicates.add(cb.lessThanOrEqualTo(carDetailsJoin.get("year"), request.getMaxYear()));
-        }
+    }
 
-        // Mileage range
-        if (request.getMinMileage() != null) {
-            predicates.add(cb.greaterThanOrEqualTo(carDetailsJoin.get("mileage"), request.getMinMileage()));
-        }
-        if (request.getMaxMileage() != null) {
-            predicates.add(cb.lessThanOrEqualTo(carDetailsJoin.get("mileage"), request.getMaxMileage()));
-        }
+    /**
+     * Apply car details filters
+     */
+    private void applyCarDetailsFilters(AdvancedSearchRequest request,
+                                        Join<Offer, CarDetails> carDetailsJoin,
+                                        List<Predicate> predicates,
+                                        jakarta.persistence.criteria.CriteriaBuilder cb) {
+        // String filters
+        applyStringFilter(carDetailsJoin, predicates, cb, "brand", request.getBrand());
+        applyStringFilter(carDetailsJoin, predicates, cb, "model", request.getModel());
 
-        // Engine power range
-        if (request.getMinEnginePower() != null) {
-            predicates.add(cb.greaterThanOrEqualTo(carDetailsJoin.get("enginePower"), request.getMinEnginePower()));
-        }
-        if (request.getMaxEnginePower() != null) {
-            predicates.add(cb.lessThanOrEqualTo(carDetailsJoin.get("enginePower"), request.getMaxEnginePower()));
-        }
+        // Range filters
+        applyRangeFilter(carDetailsJoin, predicates, cb, "year", request.getMinYear(), request.getMaxYear());
+        applyRangeFilter(carDetailsJoin, predicates, cb, "mileage", request.getMinMileage(), request.getMaxMileage());
+        applyRangeFilter(carDetailsJoin, predicates, cb, "enginePower", request.getMinEnginePower(), request.getMaxEnginePower());
 
-        // Fuel type
-        if (request.getFuelType() != null) {
-            predicates.add(cb.equal(carDetailsJoin.get("fuelType"), request.getFuelType()));
-        }
-
-        // Transmission type
-        if (request.getTransmission() != null) {
-            predicates.add(cb.equal(carDetailsJoin.get("transmission"), request.getTransmission()));
-        }
-
-        // Body type
-        if (request.getBodyType() != null) {
-            predicates.add(cb.equal(carDetailsJoin.get("bodyType"), request.getBodyType()));
-        }
-
-        // Drive type
-        if (request.getDriveType() != null) {
-            predicates.add(cb.equal(carDetailsJoin.get("driveType"), request.getDriveType()));
-        }
-
-        // Vehicle condition
-        if (request.getCondition() != null) {
-            predicates.add(cb.equal(carDetailsJoin.get("condition"), request.getCondition()));
-        }
+        // Enum filters
+        applyEnumFilter(carDetailsJoin, predicates, cb, "fuelType", request.getFuelType());
+        applyEnumFilter(carDetailsJoin, predicates, cb, "transmission", request.getTransmission());
+        applyEnumFilter(carDetailsJoin, predicates, cb, "bodyType", request.getBodyType());
+        applyEnumFilter(carDetailsJoin, predicates, cb, "driveType", request.getDriveType());
+        applyEnumFilter(carDetailsJoin, predicates, cb, "condition", request.getCondition());
 
         // Boolean filters
-        if (request.getFirstOwner() != null) {
-            predicates.add(cb.equal(carDetailsJoin.get("firstOwner"), request.getFirstOwner()));
-        }
-        if (request.getAccidentFree() != null) {
-            predicates.add(cb.equal(carDetailsJoin.get("accidentFree"), request.getAccidentFree()));
-        }
-        if (request.getServiceHistory() != null) {
-            predicates.add(cb.equal(carDetailsJoin.get("serviceHistory"), request.getServiceHistory()));
+        applyBooleanFilter(carDetailsJoin, predicates, cb, "firstOwner", request.getFirstOwner());
+        applyBooleanFilter(carDetailsJoin, predicates, cb, "accidentFree", request.getAccidentFree());
+        applyBooleanFilter(carDetailsJoin, predicates, cb, "serviceHistory", request.getServiceHistory());
+    }
+
+    /**
+     * Apply car equipment filters using groups for better organization
+     */
+    private void applyCarEquipmentFilters(AdvancedSearchRequest request,
+                                          Join<CarDetails, CarEquipment> carEquipmentJoin,
+                                          List<Predicate> predicates,
+                                          jakarta.persistence.criteria.CriteriaBuilder cb) {
+        // Apply filters by feature groups
+        applyComfortFeatures(request, carEquipmentJoin, predicates, cb);
+        applyMultimediaFeatures(request, carEquipmentJoin, predicates, cb);
+        applyAssistanceFeatures(request, carEquipmentJoin, predicates, cb);
+        applyLightingFeatures(request, carEquipmentJoin, predicates, cb);
+        applyAdditionalFeatures(request, carEquipmentJoin, predicates, cb);
+    }
+
+    /**
+     * Apply comfort feature filters
+     */
+    private void applyComfortFeatures(AdvancedSearchRequest request,
+                                      Join<CarDetails, CarEquipment> join,
+                                      List<Predicate> predicates,
+                                      jakarta.persistence.criteria.CriteriaBuilder cb) {
+        applyBooleanFilter(join, predicates, cb, "airConditioning", request.getAirConditioning());
+        applyBooleanFilter(join, predicates, cb, "automaticClimate", request.getAutomaticClimate());
+        applyBooleanFilter(join, predicates, cb, "heatedSeats", request.getHeatedSeats());
+        applyBooleanFilter(join, predicates, cb, "electricSeats", request.getElectricSeats());
+        applyBooleanFilter(join, predicates, cb, "leatherSeats", request.getLeatherSeats());
+        applyBooleanFilter(join, predicates, cb, "panoramicRoof", request.getPanoramicRoof());
+        applyBooleanFilter(join, predicates, cb, "electricWindows", request.getElectricWindows());
+        applyBooleanFilter(join, predicates, cb, "electricMirrors", request.getElectricMirrors());
+        applyBooleanFilter(join, predicates, cb, "keylessEntry", request.getKeylessEntry());
+        applyBooleanFilter(join, predicates, cb, "wheelHeating", request.getWheelHeating());
+    }
+
+    /**
+     * Apply multimedia feature filters
+     */
+    private void applyMultimediaFeatures(AdvancedSearchRequest request,
+                                         Join<CarDetails, CarEquipment> join,
+                                         List<Predicate> predicates,
+                                         jakarta.persistence.criteria.CriteriaBuilder cb) {
+        applyBooleanFilter(join, predicates, cb, "navigationSystem", request.getNavigationSystem());
+        applyBooleanFilter(join, predicates, cb, "bluetooth", request.getBluetooth());
+        applyBooleanFilter(join, predicates, cb, "usbPort", request.getUsbPort());
+        applyBooleanFilter(join, predicates, cb, "multifunction", request.getMultifunction());
+        applyBooleanFilter(join, predicates, cb, "androidAuto", request.getAndroidAuto());
+        applyBooleanFilter(join, predicates, cb, "appleCarPlay", request.getAppleCarPlay());
+        applyBooleanFilter(join, predicates, cb, "soundSystem", request.getSoundSystem());
+    }
+
+    /**
+     * Apply assistance feature filters
+     */
+    private void applyAssistanceFeatures(AdvancedSearchRequest request,
+                                         Join<CarDetails, CarEquipment> join,
+                                         List<Predicate> predicates,
+                                         jakarta.persistence.criteria.CriteriaBuilder cb) {
+        applyBooleanFilter(join, predicates, cb, "parkingSensors", request.getParkingSensors());
+        applyBooleanFilter(join, predicates, cb, "rearCamera", request.getRearCamera());
+        applyBooleanFilter(join, predicates, cb, "cruiseControl", request.getCruiseControl());
+        applyBooleanFilter(join, predicates, cb, "adaptiveCruiseControl", request.getAdaptiveCruiseControl());
+        applyBooleanFilter(join, predicates, cb, "laneAssist", request.getLaneAssist());
+        applyBooleanFilter(join, predicates, cb, "blindSpotDetection", request.getBlindSpotDetection());
+        applyBooleanFilter(join, predicates, cb, "emergencyBraking", request.getEmergencyBraking());
+        applyBooleanFilter(join, predicates, cb, "startStop", request.getStartStop());
+    }
+
+    /**
+     * Apply lighting feature filters
+     */
+    private void applyLightingFeatures(AdvancedSearchRequest request,
+                                       Join<CarDetails, CarEquipment> join,
+                                       List<Predicate> predicates,
+                                       jakarta.persistence.criteria.CriteriaBuilder cb) {
+        applyBooleanFilter(join, predicates, cb, "xenonLights", request.getXenonLights());
+        applyBooleanFilter(join, predicates, cb, "ledLights", request.getLedLights());
+        applyBooleanFilter(join, predicates, cb, "ambientLighting", request.getAmbientLighting());
+        applyBooleanFilter(join, predicates, cb, "automaticLights", request.getAutomaticLights());
+        applyBooleanFilter(join, predicates, cb, "adaptiveLights", request.getAdaptiveLights());
+    }
+
+    /**
+     * Apply additional feature filters
+     */
+    private void applyAdditionalFeatures(AdvancedSearchRequest request,
+                                         Join<CarDetails, CarEquipment> join,
+                                         List<Predicate> predicates,
+                                         jakarta.persistence.criteria.CriteriaBuilder cb) {
+        applyBooleanFilter(join, predicates, cb, "heatedSteeringWheel", request.getHeatedSteeringWheel());
+        applyBooleanFilter(join, predicates, cb, "electricTrunk", request.getElectricTrunk());
+        applyBooleanFilter(join, predicates, cb, "electricSunBlind", request.getElectricSunBlind());
+        applyBooleanFilter(join, predicates, cb, "headUpDisplay", request.getHeadUpDisplay());
+        applyBooleanFilter(join, predicates, cb, "aromatherapy", request.getAromatherapy());
+    }
+
+    /**
+     * Helper method to apply string filter
+     */
+    private <T, J> void applyStringFilter(J join, List<Predicate> predicates,
+                                          jakarta.persistence.criteria.CriteriaBuilder cb,
+                                          String field, String value) {
+        if (value != null && !value.isEmpty()) {
+            predicates.add(cb.equal(((jakarta.persistence.criteria.Path<T>)join).get(field), value));
         }
     }
 
-    private void addCarEquipmentFilters(AdvancedSearchRequest request, Join<CarDetails, CarEquipment> carEquipmentJoin,
-                                        List<Predicate> predicates, jakarta.persistence.criteria.CriteriaBuilder cb) {
-        // Comfort features
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "airConditioning", request.getAirConditioning());
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "automaticClimate", request.getAutomaticClimate());
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "heatedSeats", request.getHeatedSeats());
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "electricSeats", request.getElectricSeats());
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "leatherSeats", request.getLeatherSeats());
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "panoramicRoof", request.getPanoramicRoof());
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "electricWindows", request.getElectricWindows());
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "electricMirrors", request.getElectricMirrors());
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "keylessEntry", request.getKeylessEntry());
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "wheelHeating", request.getWheelHeating());
-
-        // Multimedia features
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "navigationSystem", request.getNavigationSystem());
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "bluetooth", request.getBluetooth());
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "usbPort", request.getUsbPort());
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "multifunction", request.getMultifunction());
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "androidAuto", request.getAndroidAuto());
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "appleCarPlay", request.getAppleCarPlay());
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "soundSystem", request.getSoundSystem());
-
-        // Assistance systems
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "parkingSensors", request.getParkingSensors());
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "rearCamera", request.getRearCamera());
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "cruiseControl", request.getCruiseControl());
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "adaptiveCruiseControl", request.getAdaptiveCruiseControl());
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "laneAssist", request.getLaneAssist());
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "blindSpotDetection", request.getBlindSpotDetection());
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "emergencyBraking", request.getEmergencyBraking());
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "startStop", request.getStartStop());
-
-        // Lighting
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "xenonLights", request.getXenonLights());
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "ledLights", request.getLedLights());
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "ambientLighting", request.getAmbientLighting());
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "automaticLights", request.getAutomaticLights());
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "adaptiveLights", request.getAdaptiveLights());
-
-        // Additional features
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "heatedSteeringWheel", request.getHeatedSteeringWheel());
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "electricTrunk", request.getElectricTrunk());
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "electricSunBlind", request.getElectricSunBlind());
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "headUpDisplay", request.getHeadUpDisplay());
-        addBooleanFilter(carEquipmentJoin, predicates, cb, "aromatherapy", request.getAromatherapy());
-    }
-
-    private void addBooleanFilter(Join<CarDetails, CarEquipment> join, List<Predicate> predicates,
-                                  jakarta.persistence.criteria.CriteriaBuilder cb, String field, Boolean value) {
+    /**
+     * Helper method to apply boolean filter
+     */
+    private <T, J> void applyBooleanFilter(J join, List<Predicate> predicates,
+                                           jakarta.persistence.criteria.CriteriaBuilder cb,
+                                           String field, Boolean value) {
         if (value != null) {
-            predicates.add(cb.equal(join.get(field), value));
+            predicates.add(cb.equal(((jakarta.persistence.criteria.Path<T>)join).get(field), value));
+        }
+    }
+
+    /**
+     * Helper method to apply enum filter
+     */
+    private <T, J, E> void applyEnumFilter(J join, List<Predicate> predicates,
+                                           jakarta.persistence.criteria.CriteriaBuilder cb,
+                                           String field, E value) {
+        if (value != null) {
+            predicates.add(cb.equal(((jakarta.persistence.criteria.Path<T>)join).get(field), value));
+        }
+    }
+
+    /**
+     * Helper method to apply range filter
+     */
+    private <T, J, N extends Comparable<? super N>> void applyRangeFilter(
+            J join, List<Predicate> predicates,
+            jakarta.persistence.criteria.CriteriaBuilder cb,
+            String field, N minValue, N maxValue) {
+
+        if (minValue != null) {
+            predicates.add(cb.greaterThanOrEqualTo(
+                    ((jakarta.persistence.criteria.Path<T>)join).<N>get(field), minValue));
+        }
+
+        if (maxValue != null) {
+            predicates.add(cb.lessThanOrEqualTo(
+                    ((jakarta.persistence.criteria.Path<T>)join).<N>get(field), maxValue));
         }
     }
 }

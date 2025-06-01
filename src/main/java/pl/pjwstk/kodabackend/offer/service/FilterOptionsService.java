@@ -33,8 +33,7 @@ public class FilterOptionsService {
      */
     @Transactional(readOnly = true)
     public Page<String> getAllBrands(Pageable pageable) {
-        List<String> brands = carDetailsRepository.findAllBrands();
-        return createPageFromList(brands, pageable);
+        return carDetailsRepository.findAllBrandsPageable(pageable);
     }
 
     /**
@@ -42,8 +41,7 @@ public class FilterOptionsService {
      */
     @Transactional(readOnly = true)
     public Page<String> searchBrands(String phrase, Pageable pageable) {
-        List<String> brands = carDetailsRepository.findBrandsByPhrase(phrase);
-        return createPageFromList(brands, pageable);
+        return carDetailsRepository.findBrandsByPhrasePageable(phrase, pageable);
     }
 
     /**
@@ -53,7 +51,7 @@ public class FilterOptionsService {
         List<String> fuelTypes = Arrays.stream(FuelType.values())
                 .map(Enum::name)
                 .collect(Collectors.toList());
-        return createPageFromList(fuelTypes, pageable);
+        return createEnumPage(fuelTypes, pageable);
     }
 
     /**
@@ -63,7 +61,7 @@ public class FilterOptionsService {
         List<String> transmissionTypes = Arrays.stream(TransmissionType.values())
                 .map(Enum::name)
                 .collect(Collectors.toList());
-        return createPageFromList(transmissionTypes, pageable);
+        return createEnumPage(transmissionTypes, pageable);
     }
 
     /**
@@ -73,7 +71,7 @@ public class FilterOptionsService {
         List<String> bodyTypes = Arrays.stream(BodyType.values())
                 .map(Enum::name)
                 .collect(Collectors.toList());
-        return createPageFromList(bodyTypes, pageable);
+        return createEnumPage(bodyTypes, pageable);
     }
 
     /**
@@ -83,7 +81,7 @@ public class FilterOptionsService {
         List<String> driveTypes = Arrays.stream(DriveType.values())
                 .map(DriveType::getDisplayName)
                 .collect(Collectors.toList());
-        return createPageFromList(driveTypes, pageable);
+        return createEnumPage(driveTypes, pageable);
     }
 
     /**
@@ -93,20 +91,21 @@ public class FilterOptionsService {
         List<String> conditions = Arrays.stream(VehicleCondition.values())
                 .map(Enum::name)
                 .collect(Collectors.toList());
-        return createPageFromList(conditions, pageable);
+        return createEnumPage(conditions, pageable);
     }
 
     /**
-     * Helper method to create a Page from a list.
+     * Helper method to create a Page from enum values.
+     * This is reasonable for enums since they have a small, fixed number of values.
      */
-    private <T> Page<T> createPageFromList(List<T> list, Pageable pageable) {
+    private <T> Page<T> createEnumPage(List<T> enumValues, Pageable pageable) {
         int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), list.size());
+        int end = Math.min((start + pageable.getPageSize()), enumValues.size());
 
-        if (start > end) {
+        if (start >= enumValues.size()) {
             return Page.empty(pageable);
         }
 
-        return new PageImpl<>(list.subList(start, end), pageable, list.size());
+        return new PageImpl<>(enumValues.subList(start, end), pageable, enumValues.size());
     }
 }
