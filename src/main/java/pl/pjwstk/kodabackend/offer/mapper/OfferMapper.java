@@ -2,8 +2,8 @@ package pl.pjwstk.kodabackend.offer.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import pl.pjwstk.kodabackend.offer.model.CreateOfferCommand;
 import pl.pjwstk.kodabackend.offer.model.OfferDetailedDto;
+import pl.pjwstk.kodabackend.offer.model.command.CreateOfferCommand;
 import pl.pjwstk.kodabackend.offer.model.OfferDto;
 import pl.pjwstk.kodabackend.offer.model.UserDto;
 import pl.pjwstk.kodabackend.offer.persistance.entity.CarDetails;
@@ -14,7 +14,6 @@ import pl.pjwstk.kodabackend.security.user.persistance.entity.AppUser;
 
 import java.util.Base64;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -186,4 +185,3 @@ public class OfferMapper {
 
         return offer;
     }
-}

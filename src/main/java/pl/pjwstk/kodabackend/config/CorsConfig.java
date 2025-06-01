@@ -22,6 +22,20 @@ class CorsConfig {
                         .allowedMethods("GET", "POST", "PATCH", "DELETE")
                         .allowCredentials(false)
                         .allowedHeaders("*");
+                registry.addMapping("/api/**")
+                        .allowedOrigins(frontendUrl) 
+                        .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(true)
+                        .exposedHeaders("Authorization", "Content-Type", "Access-Control-Allow-Origin")
+                        .maxAge(3600);
+
+                registry.addMapping("/api/v1/images/view/**")
+                        .allowedOrigins("*")
+                        .allowedMethods("GET", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(false)
+                        .maxAge(86400);
             }
         };
     }

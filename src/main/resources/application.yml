@@ -7,6 +7,12 @@ koda:
     jwt:
       secret-key: baf1e39a8c58425f98c9dce83abe581fd7ad3ce76984c5f48cc9f781dcf30d47ba9c7e862548412dabc851f8bf26e903
       access-expiration: 1209600000
+  upload:
+    dir: "src/main/resources/offer-images/"
+    max-file-size: 5242880
+    max-files: 10
+    allowed-types: image/jpeg,image/png,image/webp
+    allowed-extensions: jpg,jpeg,png,webp
 
 spring:
   application:
@@ -30,15 +36,18 @@ spring:
     show-sql: false
     hibernate:
       ddl-auto: none
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 50MB
+      enabled: true
+      file-size-threshold: 1MB
+      location: ${java.io.tmpdir}
+  web:
+    resources:
+      static-locations: classpath:/offer-images/
+      cache:
+        period: 3600
 
 server:
   port: 8137
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: mappings
-  endpoint:
-    mappings:
-      enabled: true
