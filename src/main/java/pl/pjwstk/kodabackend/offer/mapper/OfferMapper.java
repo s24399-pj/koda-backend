@@ -78,7 +78,6 @@ public class OfferMapper {
             try {
                 profilePictureBase64 = Base64.getEncoder().encodeToString(seller.getProfilePicture());
             } catch (Exception e) {
-                // Jeśli wystąpi problem z konwersją, pozostawiamy null
             }
         }
 
@@ -98,11 +97,9 @@ public class OfferMapper {
     }
 
     public Offer mapToOffer(CreateOfferCommand command) {
-        // Tworzenie obiektu CarEquipment
         CarEquipment carEquipment = null;
         if (command.getEquipment() != null) {
             carEquipment = CarEquipment.builder()
-                    // Komfort
                     .airConditioning(command.getEquipment().getAirConditioning())
                     .automaticClimate(command.getEquipment().getAutomaticClimate())
                     .heatedSeats(command.getEquipment().getHeatedSeats())
@@ -113,7 +110,6 @@ public class OfferMapper {
                     .electricMirrors(command.getEquipment().getElectricMirrors())
                     .keylessEntry(command.getEquipment().getKeylessEntry())
                     .wheelHeating(command.getEquipment().getWheelHeating())
-                    // Multimedia
                     .navigationSystem(command.getEquipment().getNavigationSystem())
                     .bluetooth(command.getEquipment().getBluetooth())
                     .usbPort(command.getEquipment().getUsbPort())
@@ -121,7 +117,6 @@ public class OfferMapper {
                     .androidAuto(command.getEquipment().getAndroidAuto())
                     .appleCarPlay(command.getEquipment().getAppleCarPlay())
                     .soundSystem(command.getEquipment().getSoundSystem())
-                    // Systemy wspomagające
                     .parkingSensors(command.getEquipment().getParkingSensors())
                     .rearCamera(command.getEquipment().getRearCamera())
                     .cruiseControl(command.getEquipment().getCruiseControl())
@@ -130,13 +125,11 @@ public class OfferMapper {
                     .blindSpotDetection(command.getEquipment().getBlindSpotDetection())
                     .emergencyBraking(command.getEquipment().getEmergencyBraking())
                     .startStop(command.getEquipment().getStartStop())
-                    // Oświetlenie
                     .xenonLights(command.getEquipment().getXenonLights())
                     .ledLights(command.getEquipment().getLedLights())
                     .ambientLighting(command.getEquipment().getAmbientLighting())
                     .automaticLights(command.getEquipment().getAutomaticLights())
                     .adaptiveLights(command.getEquipment().getAdaptiveLights())
-                    // Dodatkowe funkcje
                     .heatedSteeringWheel(command.getEquipment().getHeatedSteeringWheel())
                     .electricTrunk(command.getEquipment().getElectricTrunk())
                     .electricSunBlind(command.getEquipment().getElectricSunBlind())
@@ -145,7 +138,6 @@ public class OfferMapper {
                     .build();
         }
 
-        // Tworzenie obiektu CarDetails
         CarDetails carDetails = CarDetails.builder()
                 .brand(command.getBrand())
                 .model(command.getModel())
@@ -171,7 +163,6 @@ public class OfferMapper {
                 .carEquipment(carEquipment)
                 .build();
 
-        // Tworzenie obiektu Offer
         Offer offer = Offer.builder()
                 .title(command.getTitle())
                 .description(command.getDescription())

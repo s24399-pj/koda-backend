@@ -3,7 +3,6 @@ package pl.pjwstk.kodabackend.offer.mapper;
 import org.springframework.stereotype.Component;
 import pl.pjwstk.kodabackend.offer.model.AdvancedSearchRequest;
 import pl.pjwstk.kodabackend.offer.model.SearchFiltersDto;
-import pl.pjwstk.kodabackend.offer.persistance.entity.*;
 
 import java.math.BigDecimal;
 import java.util.List;
