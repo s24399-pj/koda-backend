@@ -2,6 +2,7 @@ package pl.pjwstk.kodabackend.offer.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import pl.pjwstk.kodabackend.offer.model.OfferDetailedDto;
 import pl.pjwstk.kodabackend.offer.model.command.CreateOfferCommand;
 import pl.pjwstk.kodabackend.offer.model.OfferDto;
 import pl.pjwstk.kodabackend.offer.model.UserDto;
@@ -21,6 +22,31 @@ public class OfferMapper {
 
     public OfferDto mapToOfferDto(Offer offer) {
         return new OfferDto(
+                offer.getId(),
+                offer.getTitle(),
+                offer.getDescription(),
+                carDetailsMapper.mapToCarDetailsDto(offer.getCarDetails()),
+                extractImageUrls(offer.getImages()),
+                offer.getPrice(),
+                offer.getCurrency(),
+                mapToUserDto(offer.getSeller()),
+                offer.getLocation(),
+                offer.getContactPhone(),
+                offer.getContactEmail(),
+                offer.getCreatedAt(),
+                offer.getUpdatedAt(),
+                offer.getExpirationDate(),
+                offer.getViewCount(),
+                offer.isFeatured(),
+                offer.isNegotiable()
+        );
+    }
+
+    /**
+     * Maps an Offer entity to OfferDetailedDto for advanced search results
+     */
+    public OfferDetailedDto mapToOfferDetailedDto(Offer offer) {
+        return new OfferDetailedDto(
                 offer.getId(),
                 offer.getTitle(),
                 offer.getDescription(),
