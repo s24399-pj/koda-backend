@@ -21,8 +21,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -37,6 +37,42 @@ public class OfferMiniService {
 
     private final Set<OfferSearchHandler> handlers;
     private OfferSearchHandler firstHandler;
+
+    /**
+     * Processes sorting aliases for queries.
+     * Enables using custom fields for sorting.
+     *
+     * @param pageable Original pagination and sorting parameters
+     * @return Modified pagination parameters with processed sorting aliases
+     */
+    public static Pageable sortingAliasProcessor(Pageable pageable) {
+        // No sorting or multiple sorting conditions - return unchanged
+        if (pageable.getSort().isUnsorted() || pageable.getSort().get().toList().size() > 1) {
+            return pageable;
+        }
+
+        // Get the sort string and process it
+        String sortString = pageable.getSort().toString();
+        int separatorIndex = sortString.indexOf(':');
+
+        if (separatorIndex == -1) {
+            return pageable; // Invalid sort format
+        }
+
+        // Split sorting field and direction
+        String fieldName = sortString.substring(0, separatorIndex);
+        String direction = sortString.substring(separatorIndex + 1).trim();
+
+        // Create new pagination parameters with processed sorting
+        return PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                JpaSort.unsafe(
+                        Sort.Direction.fromString(direction),
+                        String.format("(%s)", fieldName)
+                )
+        );
+    }
 
     /**
      * Initializes the search handlers chain after application startup.
@@ -72,7 +108,7 @@ public class OfferMiniService {
      * Uses a chain of handlers to select the most appropriate search strategy.
      *
      * @param pageable Pagination and sorting parameters
-     * @param phrase Search phrase (optional)
+     * @param phrase   Search phrase (optional)
      * @param minPrice Minimum price (optional)
      * @param maxPrice Maximum price (optional)
      * @return Page of search results as OfferMiniDto
@@ -147,41 +183,5 @@ public class OfferMiniService {
 
             log.debug(logMessage.toString());
         }
-    }
-
-    /**
-     * Processes sorting aliases for queries.
-     * Enables using custom fields for sorting.
-     *
-     * @param pageable Original pagination and sorting parameters
-     * @return Modified pagination parameters with processed sorting aliases
-     */
-    public static Pageable sortingAliasProcessor(Pageable pageable) {
-        // No sorting or multiple sorting conditions - return unchanged
-        if (pageable.getSort().isUnsorted() || pageable.getSort().get().toList().size() > 1) {
-            return pageable;
-        }
-
-        // Get the sort string and process it
-        String sortString = pageable.getSort().toString();
-        int separatorIndex = sortString.indexOf(':');
-
-        if (separatorIndex == -1) {
-            return pageable; // Invalid sort format
-        }
-
-        // Split sorting field and direction
-        String fieldName = sortString.substring(0, separatorIndex);
-        String direction = sortString.substring(separatorIndex + 1).trim();
-
-        // Create new pagination parameters with processed sorting
-        return PageRequest.of(
-                pageable.getPageNumber(),
-                pageable.getPageSize(),
-                JpaSort.unsafe(
-                        Sort.Direction.fromString(direction),
-                        String.format("(%s)", fieldName)
-                )
-        );
     }
 }

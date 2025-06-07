@@ -6,8 +6,8 @@ import pl.pjwstk.kodabackend.offer.model.OfferSearchRequest;
 import pl.pjwstk.kodabackend.offer.persistance.repository.OfferRepository;
 
 public abstract class BaseOfferSearchHandler implements OfferSearchHandler {
-    private OfferSearchHandler next;
     protected final OfferRepository offerRepository;
+    private OfferSearchHandler next;
 
     protected BaseOfferSearchHandler(OfferRepository offerRepository) {
         this.offerRepository = offerRepository;
@@ -19,9 +19,10 @@ public abstract class BaseOfferSearchHandler implements OfferSearchHandler {
     }
 
     /**
-     * Przekazuje żądanie do następnego handlera w łańcuchu
-     * @param request Parametry wyszukiwania
-     * @return Strona wyników z następnego handlera lub pusta strona
+     * Passes the request to the next handler in the chain
+     *
+     * @param request Search parameters
+     * @return Page of results from the next handler or empty page
      */
     protected Page<OfferMiniDto> processNext(OfferSearchRequest request) {
         if (next != null) {

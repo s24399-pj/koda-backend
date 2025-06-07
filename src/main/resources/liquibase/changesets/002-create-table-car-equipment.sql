@@ -6,7 +6,7 @@ CREATE TABLE car_equipment
     id                      UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     car_details_id          UUID UNIQUE,
 
-    -- Komfort
+    -- Comfort
     air_conditioning        BOOLEAN,
     automatic_climate       BOOLEAN,
     heated_seats            BOOLEAN,
@@ -27,7 +27,7 @@ CREATE TABLE car_equipment
     apple_car_play          BOOLEAN,
     sound_system            BOOLEAN,
 
-    -- Systemy wspomagające
+    -- Assistance systems
     parking_sensors         BOOLEAN,
     rear_camera             BOOLEAN,
     cruise_control          BOOLEAN,
@@ -37,14 +37,14 @@ CREATE TABLE car_equipment
     emergency_braking       BOOLEAN,
     start_stop              BOOLEAN,
 
-    -- Oświetlenie
+    -- Lighting
     xenon_lights            BOOLEAN,
     led_lights              BOOLEAN,
     ambient_lighting        BOOLEAN,
     automatic_lights        BOOLEAN,
     adaptive_lights         BOOLEAN,
 
-    -- Dodatkowe funkcje
+    -- Additional features
     heated_steering_wheel   BOOLEAN,
     electric_trunk          BOOLEAN,
     electric_sun_blind      BOOLEAN,

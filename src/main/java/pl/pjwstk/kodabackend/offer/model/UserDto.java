@@ -8,4 +8,5 @@ public record UserDto(
         String lastName,
         String email,
         String profilePictureBase64
-) {}
+) {
+}

@@ -1,7 +1,11 @@
 package pl.pjwstk.kodabackend.offer.model;
 
 import lombok.Data;
-import pl.pjwstk.kodabackend.offer.persistance.entity.*;
+import pl.pjwstk.kodabackend.offer.persistance.entity.BodyType;
+import pl.pjwstk.kodabackend.offer.persistance.entity.DriveType;
+import pl.pjwstk.kodabackend.offer.persistance.entity.FuelType;
+import pl.pjwstk.kodabackend.offer.persistance.entity.TransmissionType;
+import pl.pjwstk.kodabackend.offer.persistance.entity.VehicleCondition;
 
 import java.util.List;
 

@@ -6,10 +6,10 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import pl.pjwstk.kodabackend.image.strategy.ResourceLocationStrategy;
 import pl.pjwstk.kodabackend.image.builder.ImageResponseBuilder;
 import pl.pjwstk.kodabackend.image.resolver.ContentTypeResolver;
 import pl.pjwstk.kodabackend.image.strategy.ResourceLocation;
+import pl.pjwstk.kodabackend.image.strategy.ResourceLocationStrategy;
 import pl.pjwstk.kodabackend.image.validator.FilenameValidator;
 
 import java.util.List;

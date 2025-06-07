@@ -27,16 +27,11 @@ public class ContentTypeResolver {
         }
 
         return switch (filename.toLowerCase()) {
-            case String name when name.endsWith(".jpg") || name.endsWith(".jpeg") ->
-                    MediaType.IMAGE_JPEG_VALUE;
-            case String name when name.endsWith(".png") ->
-                    MediaType.IMAGE_PNG_VALUE;
-            case String name when name.endsWith(".webp") ->
-                    "image/webp";
-            case String name when name.endsWith(".gif") ->
-                    MediaType.IMAGE_GIF_VALUE;
-            default ->
-                    MediaType.APPLICATION_OCTET_STREAM_VALUE;
+            case String name when name.endsWith(".jpg") || name.endsWith(".jpeg") -> MediaType.IMAGE_JPEG_VALUE;
+            case String name when name.endsWith(".png") -> MediaType.IMAGE_PNG_VALUE;
+            case String name when name.endsWith(".webp") -> "image/webp";
+            case String name when name.endsWith(".gif") -> MediaType.IMAGE_GIF_VALUE;
+            default -> MediaType.APPLICATION_OCTET_STREAM_VALUE;
         };
     }
 }
