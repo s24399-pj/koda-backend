@@ -36,6 +36,7 @@ public class PhraseAndPriceSearchHandler extends BaseOfferSearchHandler {
         }
         return processNext(request);
     }
+
     @Override
     public int getOrder() {
         return 1;

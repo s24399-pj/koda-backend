@@ -36,7 +36,7 @@ public class FileStorageService {
 
         String originalFilename = file.getOriginalFilename();
         String extension = getFileExtension(originalFilename);
-        String uniqueFilename = UUID.randomUUID().toString() + "." + extension;
+        String uniqueFilename = UUID.randomUUID() + "." + extension;
 
         Path filePath = uploadPath.resolve(uniqueFilename);
 

@@ -1,7 +1,7 @@
 -- changeset s24399:007-insert-offers
 -- comment Generate offers
 
--- Deklaracja zmiennych do przechowywania wygenerowanych UUID
+-- Declaration of variables for storing generated UUIDs
 DO $$
 DECLARE
 car_equipment_id1 UUID := gen_random_uuid();
@@ -28,15 +28,15 @@ car_equipment_id1 UUID := gen_random_uuid();
     offer_id6 UUID := gen_random_uuid();
     offer_id7 UUID := gen_random_uuid();
 
-    -- Pobierz UUID użytkowników
+    -- Get user UUIDs
     admin_id UUID;
     dealer_id UUID;
 BEGIN
-    -- Pobierz ID użytkowników
+    -- Get user IDs
 SELECT id INTO admin_id FROM app_users WHERE email = 'mir@koda.com';
 SELECT id INTO dealer_id FROM app_users WHERE email = 'slavdeal@koda.com';
 
--- Insert do tabeli car_equipment
+-- Insert into car_equipment table
 INSERT INTO car_equipment (
     id,
     air_conditioning,
@@ -76,7 +76,7 @@ INSERT INTO car_equipment (
     aromatherapy
 )
 VALUES
-    -- Toyota Corolla - podstawowe, ale dobre wyposażenie rodzinnego auta
+    -- Toyota Corolla - basic but good equipment for family car
     (car_equipment_id1,
      TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, TRUE, TRUE, TRUE, FALSE,
      TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, FALSE,
@@ -84,7 +84,7 @@ VALUES
      FALSE, TRUE, FALSE, TRUE, FALSE,
      FALSE, FALSE, FALSE, FALSE, FALSE),
 
-    -- Honda Civic - nowoczesne wyposażenie klasy kompakt premium
+    -- Honda Civic - modern equipment for compact premium class
     (car_equipment_id2,
      TRUE, TRUE, TRUE, FALSE, TRUE, FALSE, TRUE, TRUE, TRUE, FALSE,
      TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,
@@ -92,7 +92,7 @@ VALUES
      FALSE, TRUE, TRUE, TRUE, FALSE,
      TRUE, FALSE, FALSE, FALSE, FALSE),
 
-    -- BMW M5 F90 - topowa limuzyna z pełnym wyposażeniem
+    -- BMW M5 F90 - top sedan with full equipment
     (car_equipment_id3,
      TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,
      TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,
@@ -100,7 +100,7 @@ VALUES
      FALSE, TRUE, TRUE, TRUE, TRUE,
      TRUE, TRUE, TRUE, TRUE, TRUE),
 
-    -- Ford Focus RS - hot-hatch z dobrym wyposażeniem
+    -- Ford Focus RS - hot-hatch with good equipment
     (car_equipment_id4,
      TRUE, TRUE, TRUE, TRUE, TRUE, FALSE, TRUE, TRUE, TRUE, TRUE,
      TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,
@@ -108,7 +108,7 @@ VALUES
      TRUE, TRUE, TRUE, TRUE, FALSE,
      TRUE, FALSE, FALSE, FALSE, FALSE),
 
-    -- Skoda Octavia RS - praktyczne kombi sportowe
+    -- Skoda Octavia RS - practical sports wagon
     (car_equipment_id5,
      TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,
      TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,
@@ -116,7 +116,7 @@ VALUES
      FALSE, TRUE, TRUE, TRUE, TRUE,
      TRUE, TRUE, FALSE, TRUE, FALSE),
 
-    -- Volkswagen Golf MK8 R - nowoczesny hot-hatch premium
+    -- Volkswagen Golf MK8 R - modern premium hot-hatch
     (car_equipment_id6,
      TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,
      TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,
@@ -124,7 +124,7 @@ VALUES
      FALSE, TRUE, TRUE, TRUE, TRUE,
      TRUE, TRUE, FALSE, TRUE, FALSE),
 
-    -- BMW M4 CSL - luksusowe coupe z topowym wyposażeniem
+    -- BMW M4 CSL - luxury coupe with top equipment
     (car_equipment_id7,
      TRUE, TRUE, TRUE, TRUE, TRUE, FALSE, TRUE, TRUE, TRUE, TRUE,
      TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,
@@ -132,7 +132,7 @@ VALUES
      FALSE, TRUE, TRUE, TRUE, TRUE,
      TRUE, TRUE, TRUE, TRUE, TRUE);
 
--- Insert do tabeli car_details
+-- Insert into car_details table
 INSERT INTO car_details (id, brand, model, year, color, engine_displacement, vin_number, mileage, fuel_type, transmission, body_type, drive_type, engine_power, doors, seats, condition, registration_number, registration_country, first_owner, accident_free, service_history, additional_features, car_equipment_id)
 VALUES
     (car_details_id1, 'Toyota', 'Corolla', 2021, 'Czarny', '2.0L', 'SB1ZB3AE60E092395', 12643, 'PETROL', 'AUTOMATIC', 'STATION_WAGON', 'FWD', 152, 4, 5, 'USED', 'RZE2136E', 'PL', TRUE, TRUE, TRUE, 'Klimatyzacja, Kamera parkingowa, Asystent pasa ruchu', car_equipment_id1),
@@ -143,14 +143,14 @@ VALUES
     (car_details_id6, 'Volkswagen', 'Golf MK8 R', 2021, 'Biały', '2.0L', 'WVWZZZ1KZMP051234', 15000, 'PETROL', 'AUTOMATIC', 'HATCHBACK', 'AWD', 320, 5, 5, 'USED', 'SL76543', 'PL', TRUE, TRUE, TRUE, 'System 4Motion, Tryb Drift, Adaptacyjne zawieszenie DCC, System R-Performance, Wydech Akrapovic', car_equipment_id6),
     (car_details_id7, 'BMW', 'M4 CSL G82', 2022, 'Szary', '3.0L', 'WBS73AZ01NCG87654', 8000, 'PETROL', 'AUTOMATIC', 'COUPE', 'RWD', 550, 2, 4, 'USED', 'GD43210', 'PL', TRUE, TRUE, TRUE, 'Karbonowa maska, Karbonowe fotele, M Drive Professional, Układ wydechowy M Sport, Pakiet CSL', car_equipment_id7);
 
--- Insert do tabeli offer
+-- Insert into offers table
 INSERT INTO offers (id, title, description, car_details_id, price, currency, app_user_id, location, contact_phone, contact_email, created_at, updated_at, expiration_date, view_count, featured, negotiable, version)
 VALUES
     (offer_id1, 'Toyota Corolla TS 2.0 Dynamic Force Hybrid', 'Toyota Corolla w wersji kombi z hybrydowym napędem 2.0L Dynamic Force. Samochód w bardzo dobrym stanie technicznym i wizualnym, regularnie serwisowany, bezwypadkowy. Pierwszy właściciel, komplet dokumentów serwisowych.', car_details_id1, 112000, 'PLN', admin_id, 'Warszawa', '123456789', 'kontakt@toyota.pl', NOW(), NOW(), '2025-12-31', 0, FALSE, TRUE, 1),
 
     (offer_id2, 'Honda Civic Sedan 1.5 VTEC Turbo Executive', 'Honda Civic w najwyższej wersji wyposażenia Executive z silnikiem 1.5 VTEC Turbo. Samochód jak nowy, niski przebieg, pełna historia serwisowa ASO Honda. Idealny dla osób ceniących komfort i niezawodność.', car_details_id2, 125000, 'PLN', admin_id, 'Wrocław', '987654321', 'kontakt@honda.pl', NOW(), NOW(), '2025-12-31', 0, FALSE, FALSE, 1),
 
-    (offer_id3, 'BMW M5 Competition F90 - 625KM - Limitowana edycja', 'BMW M5 Competition w idealnym stanie. Samochód serwisowany w ASO, pełna historia serwisowa, drugi właściciel. Pakiet Competition, pełne wyposażenie. Możliwość sprawdzenia w dowolnym serwisie. Prawdziwy potwór mocy w eleganckiej limuzynie.', car_details_id3, 450000, 'PLN', dealer_id, 'Kraków', '555444333', 'bmw.sprzedaz@example.com', NOW(), NOW(), '2025-12-15', 0, TRUE, TRUE, 1),
+    (offer_id3, 'BMW M5 Competition F90 - 625KM - Limitowana edycja', 'BMW M5 Competition - absolutny szczyt możliwości w klasie luksusowych sedanów sportowych. Ten wyjątkowy egzemplarz w kolorze Marina Bay Blue Metallic reprezentuje najwyższy poziom inżynierii BMW M GmbH. Serce tego bestii to handcrafted silnik V8 4.4L M TwinPower Turbo o mocy 625KM i momencie obrotowym 750Nm, który pozwala na przyspieszenie 0-100 km/h w zaledwie 3.3 sekundy. Samochód został wyposażony w pakiet Competition, który zawiera sportowe zawieszenie M, aktywny stabilizator M, sportowy układ wydechowy M Performance z klapami sterowanymi elektronicznie oraz ekskluzywne 20-calowe felgi M z oponami Michelin Pilot Sport 4S. Wnętrze wykończone jest najwyższej jakości skórą Merino z kontrastowymi przeszyciami, fotele M z funkcją masażu i pamięci ustawień, carbon-alcantara na kierownicy oraz ekskluzywne wykończenia z włókna węglowego. System M Drive Professional oferuje dwa dodatkowe klawisze M na kierownicy do szybkiego przełączania między konfiguracjami. Samochód posiada pełną historię serwisową w ASO BMW, drugi właściciel od pierwszego roku. Wszystkie przeglądy wykonywane zgodnie z harmonogramem, używane wyłącznie oryginalne części BMW M Performance. Możliwość sprawdzenia w dowolnym autoryzowanym serwisie BMW. To nie tylko samochód - to doświadczenie, które łączy luksus z niepowtarzalną mocą i precyzją niemieckiej inżynierii. Idealny dla kolekcjonera lub entuzjasty, który szuka połączenia codziennej praktyczności z ekscytującą jazdą.', car_details_id3, 450000, 'PLN', dealer_id, 'Kraków', '555444333', 'bmw.sprzedaz@example.com', NOW(), NOW(), '2025-12-15', 0, TRUE, TRUE, 1),
 
     (offer_id4, 'Ford Focus RS MK3 - Kultowy hot-hatch w kolorze Nitrous Blue', 'Ford Focus RS w oryginalnym niebieskim kolorze Nitrous Blue. Samochód w pełni sprawny, regularnie serwisowany. Niewielkie ślady użytkowania. Prawdziwa gratka dla fanów szybkich hatchbacków. Auto jest wyposażone w unikatowy tryb Drift, który pozwala na kontrolowane poślizgi.', car_details_id4, 120000, 'PLN', dealer_id, 'Poznań', '111222333', 'focusrs@example.com', NOW(), NOW(), '2025-11-30', 0, TRUE, FALSE, 1),
 
@@ -160,7 +160,7 @@ VALUES
 
     (offer_id7, 'BMW M4 CSL G82 550KM - Limitowana edycja z numerem', 'Unikatowe BMW M4 CSL - jeden z 1000 wyprodukowanych egzemplarzy. Samochód kolekcjonerski, idealny stan, niski przebieg. Pełne wyposażenie z M Carbon pakietem. Historia serwisowa udokumentowana, wszystkie przeglądy w ASO BMW. Karbonowy dach, maska i zderzaki. Prawdziwe auto dla kolekcjonerów.', car_details_id7, 650000, 'PLN', dealer_id, 'Warszawa', '777888999', 'm4csl@example.com', NOW(), NOW(), '2025-12-20', 0, TRUE, TRUE, 1);
 
--- Insert do tabeli offer_images
+-- Insert into offer_images table
 INSERT INTO offer_images (id, url, caption, is_primary, sort_order, offer_id)
 VALUES
     (gen_random_uuid(), 'toyota.webp', 'Toyota Corolla TS Hybrid', TRUE, 1, offer_id1),
@@ -174,7 +174,7 @@ VALUES
     (gen_random_uuid(), 'bmw_m5.png', 'BMW M5 F90 Competition', TRUE, 1, offer_id3),
     (gen_random_uuid(), 'bmw_m5_interior.png', 'Wnętrze BMW M5', FALSE, 2, offer_id3),
     (gen_random_uuid(), 'bmw_m5_engine.png', 'Silnik V8 4.4L Twin-Turbo', FALSE, 3, offer_id3),
-    (gen_random_uuid(), 'bmw_m5_wheels.webp', 'Felgi BMW M5 Competition', FALSE, 4, offer_id3),
+    (gen_random_uuid(), 'bmw_m5_wheels.png', 'Felgi BMW M5 Competition', FALSE, 4, offer_id3),
     (gen_random_uuid(), 'bmw_m5_rear.png', 'Tył BMW M5 Competition', FALSE, 5, offer_id3),
 
     (gen_random_uuid(), 'ford_focus_rs.webp', 'Ford Focus RS', TRUE, 1, offer_id4),

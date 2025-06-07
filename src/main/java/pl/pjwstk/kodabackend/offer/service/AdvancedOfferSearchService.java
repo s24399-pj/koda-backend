@@ -1,5 +1,8 @@
 package pl.pjwstk.kodabackend.offer.service;
 
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -7,15 +10,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.pjwstk.kodabackend.offer.mapper.OfferMapper;
 import pl.pjwstk.kodabackend.offer.model.AdvancedSearchRequest;
 import pl.pjwstk.kodabackend.offer.model.OfferDetailedDto;
-import pl.pjwstk.kodabackend.offer.persistance.entity.*;
+import pl.pjwstk.kodabackend.offer.persistance.entity.CarDetails;
+import pl.pjwstk.kodabackend.offer.persistance.entity.CarEquipment;
+import pl.pjwstk.kodabackend.offer.persistance.entity.Offer;
 import pl.pjwstk.kodabackend.offer.persistance.repository.OfferRepository;
-import pl.pjwstk.kodabackend.offer.mapper.OfferMapper;
 
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.JoinType;
-import jakarta.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -216,7 +218,7 @@ public class AdvancedOfferSearchService {
                                           jakarta.persistence.criteria.CriteriaBuilder cb,
                                           String field, String value) {
         if (value != null && !value.isEmpty()) {
-            predicates.add(cb.equal(((jakarta.persistence.criteria.Path<T>)join).get(field), value));
+            predicates.add(cb.equal(((jakarta.persistence.criteria.Path<T>) join).get(field), value));
         }
     }
 
@@ -227,7 +229,7 @@ public class AdvancedOfferSearchService {
                                            jakarta.persistence.criteria.CriteriaBuilder cb,
                                            String field, Boolean value) {
         if (value != null) {
-            predicates.add(cb.equal(((jakarta.persistence.criteria.Path<T>)join).get(field), value));
+            predicates.add(cb.equal(((jakarta.persistence.criteria.Path<T>) join).get(field), value));
         }
     }
 
@@ -238,7 +240,7 @@ public class AdvancedOfferSearchService {
                                            jakarta.persistence.criteria.CriteriaBuilder cb,
                                            String field, E value) {
         if (value != null) {
-            predicates.add(cb.equal(((jakarta.persistence.criteria.Path<T>)join).get(field), value));
+            predicates.add(cb.equal(((jakarta.persistence.criteria.Path<T>) join).get(field), value));
         }
     }
 
@@ -252,12 +254,12 @@ public class AdvancedOfferSearchService {
 
         if (minValue != null) {
             predicates.add(cb.greaterThanOrEqualTo(
-                    ((jakarta.persistence.criteria.Path<T>)join).<N>get(field), minValue));
+                    ((jakarta.persistence.criteria.Path<T>) join).get(field), minValue));
         }
 
         if (maxValue != null) {
             predicates.add(cb.lessThanOrEqualTo(
-                    ((jakarta.persistence.criteria.Path<T>)join).<N>get(field), maxValue));
+                    ((jakarta.persistence.criteria.Path<T>) join).get(field), maxValue));
         }
     }
 }

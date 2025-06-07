@@ -15,30 +15,30 @@ import java.util.UUID;
 public interface AdvancedOfferRepository extends JpaRepository<Offer, UUID> {
 
     @Query(value = """
-        SELECT new pl.pjwstk.kodabackend.offer.model.OfferMiniDto(
-            o.id, o.title, o.price,
-            (SELECT img.url FROM OfferImage img WHERE img.offer = o AND img.isPrimary = true),
-            cd.mileage, cd.fuelType, cd.year, cd.enginePower, cd.displacement
-        )
-        FROM Offer o
-        JOIN o.carDetails cd
-        WHERE 1=1
-        AND (:searchTerm IS NULL OR 
-             LOWER(o.title) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR
-             LOWER(o.description) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR
-             LOWER(cd.brand) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR
-             LOWER(cd.model) LIKE LOWER(CONCAT('%', :searchTerm, '%')))
-        AND (:priceFrom IS NULL OR o.price >= :priceFrom)
-        AND (:priceTo IS NULL OR o.price <= :priceTo)
-        AND (:brand IS NULL OR LOWER(cd.brand) = LOWER(:brand))
-        AND (:model IS NULL OR LOWER(cd.model) = LOWER(:model))
-        AND (:yearFrom IS NULL OR cd.year >= :yearFrom)
-        AND (:yearTo IS NULL OR cd.year <= :yearTo)
-        AND (:mileageFrom IS NULL OR cd.mileage >= :mileageFrom)
-        AND (:mileageTo IS NULL OR cd.mileage <= :mileageTo)
-        AND (:enginePowerFrom IS NULL OR cd.enginePower >= :enginePowerFrom)
-        AND (:enginePowerTo IS NULL OR cd.enginePower <= :enginePowerTo)
-        """)
+            SELECT new pl.pjwstk.kodabackend.offer.model.OfferMiniDto(
+                o.id, o.title, o.price,
+                (SELECT img.url FROM OfferImage img WHERE img.offer = o AND img.isPrimary = true),
+                cd.mileage, cd.fuelType, cd.year, cd.enginePower, cd.displacement
+            )
+            FROM Offer o
+            JOIN o.carDetails cd
+            WHERE 1=1
+            AND (:searchTerm IS NULL OR 
+                 LOWER(o.title) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR
+                 LOWER(o.description) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR
+                 LOWER(cd.brand) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR
+                 LOWER(cd.model) LIKE LOWER(CONCAT('%', :searchTerm, '%')))
+            AND (:priceFrom IS NULL OR o.price >= :priceFrom)
+            AND (:priceTo IS NULL OR o.price <= :priceTo)
+            AND (:brand IS NULL OR LOWER(cd.brand) = LOWER(:brand))
+            AND (:model IS NULL OR LOWER(cd.model) = LOWER(:model))
+            AND (:yearFrom IS NULL OR cd.year >= :yearFrom)
+            AND (:yearTo IS NULL OR cd.year <= :yearTo)
+            AND (:mileageFrom IS NULL OR cd.mileage >= :mileageFrom)
+            AND (:mileageTo IS NULL OR cd.mileage <= :mileageTo)
+            AND (:enginePowerFrom IS NULL OR cd.enginePower >= :enginePowerFrom)
+            AND (:enginePowerTo IS NULL OR cd.enginePower <= :enginePowerTo)
+            """)
     Page<OfferMiniDto> findOffersWithBasicFilters(
             @Param("searchTerm") String searchTerm,
             @Param("priceFrom") BigDecimal priceFrom,
@@ -55,25 +55,25 @@ public interface AdvancedOfferRepository extends JpaRepository<Offer, UUID> {
     );
 
     @Query(value = """
-        SELECT new pl.pjwstk.kodabackend.offer.model.OfferMiniDto(
-            o.id, o.title, o.price,
-            (SELECT img.url FROM OfferImage img WHERE img.offer = o AND img.isPrimary = true),
-            cd.mileage, cd.fuelType, cd.year, cd.enginePower, cd.displacement
-        )
-        FROM Offer o
-        JOIN o.carDetails cd
-        LEFT JOIN cd.carEquipment ce
-        WHERE 1=1
-        AND (:searchTerm IS NULL OR 
-             LOWER(o.title) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR
-             LOWER(o.description) LIKE LOWER(CONCAT('%', :searchTerm, '%')))
-        AND (:priceFrom IS NULL OR o.price >= :priceFrom)
-        AND (:priceTo IS NULL OR o.price <= :priceTo)
-        AND (:brand IS NULL OR LOWER(cd.brand) = LOWER(:brand))
-        AND (:airConditioning IS NULL OR ce.airConditioning = :airConditioning)
-        AND (:navigationSystem IS NULL OR ce.navigationSystem = :navigationSystem)
-        AND (:bluetooth IS NULL OR ce.bluetooth = :bluetooth)
-        """)
+            SELECT new pl.pjwstk.kodabackend.offer.model.OfferMiniDto(
+                o.id, o.title, o.price,
+                (SELECT img.url FROM OfferImage img WHERE img.offer = o AND img.isPrimary = true),
+                cd.mileage, cd.fuelType, cd.year, cd.enginePower, cd.displacement
+            )
+            FROM Offer o
+            JOIN o.carDetails cd
+            LEFT JOIN cd.carEquipment ce
+            WHERE 1=1
+            AND (:searchTerm IS NULL OR 
+                 LOWER(o.title) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR
+                 LOWER(o.description) LIKE LOWER(CONCAT('%', :searchTerm, '%')))
+            AND (:priceFrom IS NULL OR o.price >= :priceFrom)
+            AND (:priceTo IS NULL OR o.price <= :priceTo)
+            AND (:brand IS NULL OR LOWER(cd.brand) = LOWER(:brand))
+            AND (:airConditioning IS NULL OR ce.airConditioning = :airConditioning)
+            AND (:navigationSystem IS NULL OR ce.navigationSystem = :navigationSystem)
+            AND (:bluetooth IS NULL OR ce.bluetooth = :bluetooth)
+            """)
     Page<OfferMiniDto> findOffersWithEquipmentFilters(
             @Param("searchTerm") String searchTerm,
             @Param("priceFrom") BigDecimal priceFrom,

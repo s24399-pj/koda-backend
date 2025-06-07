@@ -21,10 +21,9 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    private static final Pattern BEARER_TOKEN_REGEX = Pattern.compile("^Bearer [A-Za-z0-9-_]+\\.[A-Za-z0-9-_]+\\.([A-Za-z0-9-_]+)?$");
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
-
-    private static final Pattern BEARER_TOKEN_REGEX = Pattern.compile("^Bearer [A-Za-z0-9-_]+\\.[A-Za-z0-9-_]+\\.([A-Za-z0-9-_]+)?$");
 
     @Override
     protected void doFilterInternal(

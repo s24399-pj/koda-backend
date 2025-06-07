@@ -29,20 +29,17 @@ import java.util.UUID;
 @Entity
 public class Token {
 
+    @Column(name = "token_value", unique = true)
+    public String tokenValue;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "token_type")
+    public TokenType tokenType = TokenType.BEARER;
+    @ManyToOne
+    @JoinColumn(name = "app_user_id")
+    public AppUser appUser;
     @Id
     @UuidGenerator
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
-    @Column(name = "token_value", unique = true)
-    public String tokenValue;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "token_type")
-    public TokenType tokenType = TokenType.BEARER;
-
-    @ManyToOne
-    @JoinColumn(name = "app_user_id")
-    public AppUser appUser;
 
 }

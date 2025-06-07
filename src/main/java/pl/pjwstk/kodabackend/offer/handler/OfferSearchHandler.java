@@ -7,5 +7,6 @@ import pl.pjwstk.kodabackend.offer.model.OfferSearchRequest;
 
 public interface OfferSearchHandler extends Ordered {
     Page<OfferMiniDto> handle(OfferSearchRequest request);
+
     void setNext(OfferSearchHandler next);
 }

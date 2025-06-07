@@ -26,4 +26,5 @@ public record OfferDetailedDto(
         int viewCount,
         boolean featured,
         boolean negotiable
-) {}
+) {
+}
