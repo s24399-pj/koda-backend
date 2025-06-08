@@ -11,8 +11,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import pl.pjwstk.kodabackend.offer.model.OfferMiniDto;
 import pl.pjwstk.kodabackend.offer.model.OfferSearchRequest;
-import pl.pjwstk.kodabackend.offer.persistance.entity.FuelType;
-import pl.pjwstk.kodabackend.offer.persistance.repository.OfferRepository;
+import pl.pjwstk.kodabackend.offer.persistence.entity.FuelType;
+import pl.pjwstk.kodabackend.offer.persistence.repository.OfferRepository;
 
 import java.math.BigDecimal;
 import java.util.Arrays;

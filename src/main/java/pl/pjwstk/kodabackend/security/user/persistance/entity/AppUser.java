@@ -20,7 +20,7 @@ import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import pl.pjwstk.kodabackend.offer.persistance.entity.Offer;
+import pl.pjwstk.kodabackend.offer.persistence.entity.Offer;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -1,6 +1,6 @@
 package pl.pjwstk.kodabackend.offer.model;
 
-import pl.pjwstk.kodabackend.offer.persistance.entity.FuelType;
+import pl.pjwstk.kodabackend.offer.persistence.entity.FuelType;
 
 import java.math.BigDecimal;
 import java.util.UUID;

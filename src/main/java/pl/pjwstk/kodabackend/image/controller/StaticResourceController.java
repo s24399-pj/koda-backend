@@ -7,30 +7,19 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import pl.pjwstk.kodabackend.image.service.StaticResourceService;
 
 import java.util.List;
 
-@Slf4j
-@RestController
-@RequiredArgsConstructor
-@RequestMapping("/api/v1/images")
-@Tag(name = "Image Resources", description = "API for managing images and static resources")
-class StaticResourceController {
-
-    private final StaticResourceService staticResourceService;
+@Tag(name = "Image Viewing", description = "API for viewing and browsing images (public access, no authentication required)")
+public interface StaticResourceController {
 
     @Operation(
             summary = "View image",
-            description = "Retrieves and displays an image with the specified filename"
+            description = "Retrieve and display an image with the specified filename. Public access, no authentication required."
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -51,18 +40,14 @@ class StaticResourceController {
                     description = "Internal server error"
             )
     })
-    @GetMapping("/view/{filename}")
+    @GetMapping("/images/{filename}")
     ResponseEntity<Resource> viewImage(
             @Parameter(description = "Image filename", required = true)
-            @PathVariable String filename) {
-
-        log.debug("Image view request: {}", filename);
-        return staticResourceService.serveImage(filename);
-    }
+            @PathVariable String filename);
 
     @Operation(
             summary = "List all images",
-            description = "Retrieves a list of all available images in the system"
+            description = "Retrieve a list of all available images in the system. Public access, no authentication required."
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -78,15 +63,12 @@ class StaticResourceController {
                     description = "Internal server error while retrieving file list"
             )
     })
-    @GetMapping("/list")
-    ResponseEntity<List<String>> listImages() {
-        log.debug("Image list request");
-        return staticResourceService.listImages();
-    }
+    @GetMapping("/images")
+    ResponseEntity<List<String>> listImages();
 
     @Operation(
             summary = "Check image existence",
-            description = "Checks if an image with the specified name exists in the system"
+            description = "Check if an image with the specified name exists in the system. Public access, no authentication required."
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -102,12 +84,8 @@ class StaticResourceController {
                     description = "Internal server error while checking file"
             )
     })
-    @GetMapping("/exists/{filename}")
+    @GetMapping("/images/exists/{filename}")
     ResponseEntity<Boolean> checkImageExists(
             @Parameter(description = "Image filename to check", required = true)
-            @PathVariable String filename) {
-
-        log.debug("Image existence check request: {}", filename);
-        return staticResourceService.checkImageExists(filename);
-    }
+            @PathVariable String filename);
 }

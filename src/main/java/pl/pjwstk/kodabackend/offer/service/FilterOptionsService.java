@@ -7,12 +7,12 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.pjwstk.kodabackend.offer.persistance.entity.BodyType;
-import pl.pjwstk.kodabackend.offer.persistance.entity.DriveType;
-import pl.pjwstk.kodabackend.offer.persistance.entity.FuelType;
-import pl.pjwstk.kodabackend.offer.persistance.entity.TransmissionType;
-import pl.pjwstk.kodabackend.offer.persistance.entity.VehicleCondition;
-import pl.pjwstk.kodabackend.offer.persistance.repository.CarDetailsRepository;
+import pl.pjwstk.kodabackend.offer.persistence.entity.BodyType;
+import pl.pjwstk.kodabackend.offer.persistence.entity.DriveType;
+import pl.pjwstk.kodabackend.offer.persistence.entity.FuelType;
+import pl.pjwstk.kodabackend.offer.persistence.entity.TransmissionType;
+import pl.pjwstk.kodabackend.offer.persistence.entity.VehicleCondition;
+import pl.pjwstk.kodabackend.offer.persistence.repository.CarDetailsRepository;
 
 import java.util.Arrays;
 import java.util.List;

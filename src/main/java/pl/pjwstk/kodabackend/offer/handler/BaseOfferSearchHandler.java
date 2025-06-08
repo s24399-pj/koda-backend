@@ -3,7 +3,7 @@ package pl.pjwstk.kodabackend.offer.handler;
 import org.springframework.data.domain.Page;
 import pl.pjwstk.kodabackend.offer.model.OfferMiniDto;
 import pl.pjwstk.kodabackend.offer.model.OfferSearchRequest;
-import pl.pjwstk.kodabackend.offer.persistance.repository.OfferRepository;
+import pl.pjwstk.kodabackend.offer.persistence.repository.OfferRepository;
 
 public abstract class BaseOfferSearchHandler implements OfferSearchHandler {
     protected final OfferRepository offerRepository;

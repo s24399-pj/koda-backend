@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import pl.pjwstk.kodabackend.offer.model.OfferMiniDto;
 import pl.pjwstk.kodabackend.offer.model.OfferSearchRequest;
-import pl.pjwstk.kodabackend.offer.persistance.repository.OfferRepository;
+import pl.pjwstk.kodabackend.offer.persistence.repository.OfferRepository;
 
 @Component
 class PhraseSearchHandler extends BaseOfferSearchHandler {
@@ -27,6 +27,6 @@ class PhraseSearchHandler extends BaseOfferSearchHandler {
 
     @Override
     public int getOrder() {
-        return 3; // Niższy priorytet
+        return 3;
     }
 }

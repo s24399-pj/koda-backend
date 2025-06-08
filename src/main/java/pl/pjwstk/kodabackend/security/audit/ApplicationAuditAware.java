@@ -9,10 +9,28 @@ import pl.pjwstk.kodabackend.security.user.persistance.entity.AppUser;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Provides current user information for JPA auditing.
+ * <p>
+ * Automatically populates audit fields (createdBy, modifiedBy) in entities
+ * with the ID of the currently authenticated user.
+ * </p>
+ */
 public class ApplicationAuditAware implements AuditorAware<UUID> {
 
+    /**
+     * Retrieves the ID of the currently authenticated user for auditing purposes.
+     * <p>
+     * Returns empty if:
+     * <ul>
+     *   <li>No authentication context exists</li>
+     *   <li>User is not authenticated</li>
+     *   <li>User is anonymous</li>
+     * </ul>
+     *
+     * @return Optional containing the current user's ID, or empty if not authenticated
+     */
     @Override
-    @SuppressWarnings("all")
     public Optional<UUID> getCurrentAuditor() {
         Authentication authentication =
                 SecurityContextHolder

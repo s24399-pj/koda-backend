@@ -2,6 +2,7 @@ package pl.pjwstk.kodabackend.image.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pl.pjwstk.kodabackend.exception.BadRequestException;
@@ -10,6 +11,7 @@ import pl.pjwstk.kodabackend.image.config.ImageUploadProperties;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@EnableConfigurationProperties(ImageUploadProperties.class)
 public class FileValidationService {
 
     private final ImageUploadProperties uploadProperties;

@@ -1,8 +1,6 @@
 koda:
   frontend:
     url: http://localhost:5173
-  offer:
-    photos-path: file:///C:/wapro-baza/FOTKI_SKLEP/
   security:
     jwt:
       secret-key: baf1e39a8c58425f98c9dce83abe581fd7ad3ce76984c5f48cc9f781dcf30d47ba9c7e862548412dabc851f8bf26e903

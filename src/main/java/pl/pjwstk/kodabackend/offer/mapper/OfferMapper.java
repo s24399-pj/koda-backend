@@ -6,10 +6,10 @@ import pl.pjwstk.kodabackend.offer.model.OfferDetailedDto;
 import pl.pjwstk.kodabackend.offer.model.OfferDto;
 import pl.pjwstk.kodabackend.offer.model.UserDto;
 import pl.pjwstk.kodabackend.offer.model.command.CreateOfferCommand;
-import pl.pjwstk.kodabackend.offer.persistance.entity.CarDetails;
-import pl.pjwstk.kodabackend.offer.persistance.entity.CarEquipment;
-import pl.pjwstk.kodabackend.offer.persistance.entity.Offer;
-import pl.pjwstk.kodabackend.offer.persistance.entity.OfferImage;
+import pl.pjwstk.kodabackend.offer.persistence.entity.CarDetails;
+import pl.pjwstk.kodabackend.offer.persistence.entity.CarEquipment;
+import pl.pjwstk.kodabackend.offer.persistence.entity.Offer;
+import pl.pjwstk.kodabackend.offer.persistence.entity.OfferImage;
 import pl.pjwstk.kodabackend.security.user.persistance.entity.AppUser;
 
 import java.util.Base64;
