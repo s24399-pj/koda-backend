@@ -17,7 +17,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import pl.pjwstk.kodabackend.offer.handler.OfferSearchHandler;
 import pl.pjwstk.kodabackend.offer.model.OfferMiniDto;
 import pl.pjwstk.kodabackend.offer.model.OfferSearchRequest;
-import pl.pjwstk.kodabackend.offer.persistance.entity.FuelType;
+import pl.pjwstk.kodabackend.offer.persistence.entity.FuelType;
 import pl.pjwstk.kodabackend.offer.service.OfferMiniService;
 
 import java.math.BigDecimal;

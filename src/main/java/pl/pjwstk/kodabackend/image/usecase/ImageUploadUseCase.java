@@ -7,13 +7,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import pl.pjwstk.kodabackend.exception.BadRequestException;
 import pl.pjwstk.kodabackend.exception.NotFoundException;
-import pl.pjwstk.kodabackend.image.dto.ImageUploadResponse;
+import pl.pjwstk.kodabackend.image.model.ImageUploadResponse;
 import pl.pjwstk.kodabackend.image.service.FileStorageService;
 import pl.pjwstk.kodabackend.image.service.FileValidationService;
-import pl.pjwstk.kodabackend.offer.persistance.entity.Offer;
-import pl.pjwstk.kodabackend.offer.persistance.entity.OfferImage;
-import pl.pjwstk.kodabackend.offer.persistance.repository.OfferImageRepository;
-import pl.pjwstk.kodabackend.offer.persistance.repository.OfferRepository;
+import pl.pjwstk.kodabackend.offer.persistence.entity.Offer;
+import pl.pjwstk.kodabackend.offer.persistence.entity.OfferImage;
+import pl.pjwstk.kodabackend.offer.persistence.repository.OfferImageRepository;
+import pl.pjwstk.kodabackend.offer.persistence.repository.OfferRepository;
 import pl.pjwstk.kodabackend.security.user.persistance.entity.AppUser;
 import pl.pjwstk.kodabackend.security.user.persistance.repository.AppUserRepository;
 

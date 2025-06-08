@@ -2,12 +2,10 @@ package pl.pjwstk.kodabackend.image.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
 @Data
-@Component
 @ConfigurationProperties(prefix = "koda.upload")
 public class ImageUploadProperties {
     private String dir = "classpath:offer-images/";

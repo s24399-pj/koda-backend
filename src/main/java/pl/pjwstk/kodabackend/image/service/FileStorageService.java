@@ -2,18 +2,19 @@ package pl.pjwstk.kodabackend.image.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pl.pjwstk.kodabackend.image.config.ImageUploadProperties;
+import pl.pjwstk.kodabackend.image.model.FileInfo;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -21,6 +22,7 @@ import java.util.UUID;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@EnableConfigurationProperties(ImageUploadProperties.class)
 public class FileStorageService {
 
     private final ImageUploadProperties uploadProperties;
@@ -28,47 +30,33 @@ public class FileStorageService {
 
     public String saveFile(MultipartFile file) throws IOException {
         Path uploadPath = getUploadPath();
+        ensureDirectoryExists(uploadPath);
 
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
-            log.info("Created directory: {}", uploadPath);
-        }
-
-        String originalFilename = file.getOriginalFilename();
-        String extension = getFileExtension(originalFilename);
-        String uniqueFilename = UUID.randomUUID() + "." + extension;
-
+        String uniqueFilename = generateUniqueFilename(file.getOriginalFilename());
         Path filePath = uploadPath.resolve(uniqueFilename);
 
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+        log.debug("Saved file: {} (size: {} bytes)", uniqueFilename, file.getSize());
 
-        log.info("Saved file: {} at location: {} (size: {} bytes)",
-                uniqueFilename, filePath, file.getSize());
         return uniqueFilename;
     }
 
     public void deleteFile(String fileUrl) throws IOException {
-        String filename = fileUrl.substring(fileUrl.lastIndexOf('/') + 1);
-        log.debug("Deleting file from disk: {}", filename);
-
-        Path uploadPath = getUploadPath();
-        Path filePath = uploadPath.resolve(filename);
+        String filename = extractFilename(fileUrl);
+        Path filePath = getUploadPath().resolve(filename);
 
         if (Files.exists(filePath)) {
             Files.delete(filePath);
-            log.info("Deleted file: {}", filePath);
+            log.debug("Deleted file: {}", filename);
         } else {
-            log.warn("File {} does not exist at location: {}", filename, filePath);
+            log.warn("File not found for deletion: {}", filename);
         }
     }
 
     public boolean fileExists(String filename) {
         try {
-            Path uploadPath = getUploadPath();
-            Path filePath = uploadPath.resolve(filename);
-            boolean exists = Files.exists(filePath);
-            log.debug("Checking file existence {}: {}", filename, exists);
-            return exists;
+            Path filePath = getUploadPath().resolve(filename);
+            return Files.exists(filePath);
         } catch (IOException e) {
             log.error("Error checking file existence: {}", filename, e);
             return false;
@@ -79,18 +67,15 @@ public class FileStorageService {
         try {
             Path uploadPath = getUploadPath();
             if (!Files.exists(uploadPath)) {
-                log.warn("Directory {} does not exist", uploadPath);
+                log.warn("Upload directory does not exist: {}", uploadPath);
                 return List.of();
             }
 
-            List<String> files = Files.list(uploadPath)
+            return Files.list(uploadPath)
                     .filter(Files::isRegularFile)
                     .map(path -> path.getFileName().toString())
                     .sorted()
                     .toList();
-
-            log.debug("Found {} files in directory {}", files.size(), uploadPath);
-            return files;
         } catch (IOException e) {
             log.error("Error listing files", e);
             return List.of();
@@ -98,10 +83,7 @@ public class FileStorageService {
     }
 
     public Path getFilePath(String filename) throws IOException {
-        Path uploadPath = getUploadPath();
-        Path filePath = uploadPath.resolve(filename);
-        log.debug("Retrieved file path for {}: {}", filename, filePath);
-        return filePath;
+        return getUploadPath().resolve(filename);
     }
 
     public Optional<FileInfo> getFileInfo(String filename) {
@@ -111,44 +93,57 @@ public class FileStorageService {
                 return Optional.empty();
             }
 
-            FileInfo info = FileInfo.builder()
+            return Optional.of(FileInfo.builder()
                     .filename(filename)
                     .size(Files.size(filePath))
                     .lastModified(Files.getLastModifiedTime(filePath).toInstant())
                     .contentType(Files.probeContentType(filePath))
-                    .build();
-
-            return Optional.of(info);
+                    .build());
         } catch (IOException e) {
-            log.error("Error getting file info: {}", filename, e);
+            log.error("Error getting file info for: {}", filename, e);
             return Optional.empty();
         }
     }
 
+    private void ensureDirectoryExists(Path uploadPath) throws IOException {
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+            log.info("Created upload directory: {}", uploadPath);
+        }
+    }
+
+    private String generateUniqueFilename(String originalFilename) {
+        String extension = getFileExtension(originalFilename);
+        return UUID.randomUUID() + "." + extension;
+    }
+
+    private String extractFilename(String fileUrl) {
+        return fileUrl.substring(fileUrl.lastIndexOf('/') + 1);
+    }
+
     private Path getUploadPath() throws IOException {
         if (uploadProperties.getDir().startsWith("classpath:")) {
-            String resourcePath = uploadProperties.getDir().replace("classpath:", "");
-
-            try {
-                Resource resource = resourceLoader.getResource(uploadProperties.getDir());
-                if (resource.exists()) {
-                    Path path = Paths.get(resource.getURI());
-                    log.debug("Using resources path: {}", path);
-                    return path;
-                }
-            } catch (Exception e) {
-                log.debug("Cannot get path from resources: {}, using direct path", e.getMessage());
-            }
-
-            String projectPath = System.getProperty("user.dir");
-            Path fallbackPath = Paths.get(projectPath, "src", "main", "resources", resourcePath);
-            log.debug("Using fallback path: {}", fallbackPath);
-            return fallbackPath;
+            return resolveClasspathPath();
         } else {
-            Path systemPath = Paths.get(uploadProperties.getDir());
-            log.debug("Using system path: {}", systemPath);
-            return systemPath;
+            return Paths.get(uploadProperties.getDir());
         }
+    }
+
+    private Path resolveClasspathPath() {
+        String resourcePath = uploadProperties.getDir().replace("classpath:", "");
+
+        try {
+            Resource resource = resourceLoader.getResource(uploadProperties.getDir());
+            if (resource.exists()) {
+                return Paths.get(resource.getURI());
+            }
+        } catch (Exception e) {
+            log.debug("Cannot resolve classpath resource, using fallback path");
+        }
+
+        // Fallback to project directory structure
+        String projectPath = System.getProperty("user.dir");
+        return Paths.get(projectPath, "src", "main", "resources", resourcePath);
     }
 
     private String getFileExtension(String filename) {
@@ -157,47 +152,5 @@ public class FileStorageService {
         }
         int lastDotIndex = filename.lastIndexOf('.');
         return lastDotIndex == -1 ? "" : filename.substring(lastDotIndex + 1);
-    }
-
-    public record FileInfo(
-            String filename,
-            long size,
-            Instant lastModified,
-            String contentType
-    ) {
-        public static FileInfoBuilder builder() {
-            return new FileInfoBuilder();
-        }
-
-        public static class FileInfoBuilder {
-            private String filename;
-            private long size;
-            private Instant lastModified;
-            private String contentType;
-
-            public FileInfoBuilder filename(String filename) {
-                this.filename = filename;
-                return this;
-            }
-
-            public FileInfoBuilder size(long size) {
-                this.size = size;
-                return this;
-            }
-
-            public FileInfoBuilder lastModified(Instant lastModified) {
-                this.lastModified = lastModified;
-                return this;
-            }
-
-            public FileInfoBuilder contentType(String contentType) {
-                this.contentType = contentType;
-                return this;
-            }
-
-            public FileInfo build() {
-                return new FileInfo(filename, size, lastModified, contentType);
-            }
-        }
     }
 }

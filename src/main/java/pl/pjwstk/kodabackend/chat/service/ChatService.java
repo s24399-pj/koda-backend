@@ -31,10 +31,10 @@ public class ChatService {
     @Transactional
     public ChatMessageDto saveMessage(ChatMessageDto messageDto) {
         AppUser sender = userRepository.findById(messageDto.getSenderId())
-                .orElseThrow(() -> new RuntimeException("Nadawca nie istnieje"));
+                .orElseThrow(() -> new RuntimeException("Sender does not exist"));
 
         AppUser recipient = userRepository.findById(messageDto.getRecipientId())
-                .orElseThrow(() -> new RuntimeException("Odbiorca nie istnieje"));
+                .orElseThrow(() -> new RuntimeException("Recipient does not exist"));
 
         ChatMessage message = ChatMessage.builder()
                 .sender(sender)
@@ -56,7 +56,6 @@ public class ChatService {
                 .toList();
     }
 
-
     @Transactional(readOnly = true)
     public List<ConversationDto> getUserConversations(UUID userId) {
         List<UUID> conversationPartnerIds = chatMessageRepository.findConversationPartnerIds(userId);
@@ -64,7 +63,7 @@ public class ChatService {
         return conversationPartnerIds.stream().map(partnerId -> {
             AppUser partner = userRepository.findById(partnerId)
                     .orElseThrow(() -> new EntityNotFoundException(AppUser.class.getName(),
-                            "Użytkownik nie istnieje"));
+                            "User does not exist"));
 
             List<ChatMessage> recentMessages = chatMessageRepository.findMessagesByConversation(
                     userId, partnerId, PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "createdAt")));

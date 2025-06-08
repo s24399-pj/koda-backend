@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.pjwstk.kodabackend.offer.persistance.entity.OfferImage;
-import pl.pjwstk.kodabackend.offer.persistance.repository.OfferImageRepository;
+import pl.pjwstk.kodabackend.offer.persistence.entity.OfferImage;
+import pl.pjwstk.kodabackend.offer.persistence.repository.OfferImageRepository;
 
 import java.io.IOException;
 import java.nio.file.Files;

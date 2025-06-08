@@ -3,7 +3,7 @@ package pl.pjwstk.kodabackend.offer.mapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.pjwstk.kodabackend.offer.model.CarDetailsDto;
-import pl.pjwstk.kodabackend.offer.persistance.entity.CarDetails;
+import pl.pjwstk.kodabackend.offer.persistence.entity.CarDetails;
 
 @Component
 @RequiredArgsConstructor

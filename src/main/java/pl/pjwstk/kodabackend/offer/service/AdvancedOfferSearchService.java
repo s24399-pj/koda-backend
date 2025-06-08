@@ -13,10 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.pjwstk.kodabackend.offer.mapper.OfferMapper;
 import pl.pjwstk.kodabackend.offer.model.AdvancedSearchRequest;
 import pl.pjwstk.kodabackend.offer.model.OfferDetailedDto;
-import pl.pjwstk.kodabackend.offer.persistance.entity.CarDetails;
-import pl.pjwstk.kodabackend.offer.persistance.entity.CarEquipment;
-import pl.pjwstk.kodabackend.offer.persistance.entity.Offer;
-import pl.pjwstk.kodabackend.offer.persistance.repository.OfferRepository;
+import pl.pjwstk.kodabackend.offer.persistence.entity.CarDetails;
+import pl.pjwstk.kodabackend.offer.persistence.entity.CarEquipment;
+import pl.pjwstk.kodabackend.offer.persistence.entity.Offer;
+import pl.pjwstk.kodabackend.offer.persistence.repository.OfferRepository;
 
 import java.util.ArrayList;
 import java.util.List;

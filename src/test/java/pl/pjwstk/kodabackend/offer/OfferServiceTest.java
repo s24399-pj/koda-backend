@@ -8,8 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import pl.pjwstk.kodabackend.exception.EntityNotFoundException;
 import pl.pjwstk.kodabackend.offer.mapper.OfferMapper;
 import pl.pjwstk.kodabackend.offer.model.OfferDto;
-import pl.pjwstk.kodabackend.offer.persistance.entity.Offer;
-import pl.pjwstk.kodabackend.offer.persistance.repository.OfferRepository;
+import pl.pjwstk.kodabackend.offer.persistence.entity.Offer;
+import pl.pjwstk.kodabackend.offer.persistence.repository.OfferRepository;
 import pl.pjwstk.kodabackend.offer.service.OfferService;
 
 import java.util.Optional;

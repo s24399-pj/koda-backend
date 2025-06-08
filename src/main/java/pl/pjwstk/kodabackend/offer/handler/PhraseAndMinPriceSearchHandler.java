@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import pl.pjwstk.kodabackend.offer.model.OfferMiniDto;
 import pl.pjwstk.kodabackend.offer.model.OfferSearchRequest;
-import pl.pjwstk.kodabackend.offer.persistance.repository.OfferRepository;
+import pl.pjwstk.kodabackend.offer.persistence.repository.OfferRepository;
 
 /**
  * Handler for searching offers with both phrase and minimum price filter.
@@ -31,6 +31,6 @@ public class PhraseAndMinPriceSearchHandler extends BaseOfferSearchHandler {
 
     @Override
     public int getOrder() {
-        return 1; // Same priority as PhraseAndPriceSearchHandler
+        return 1;
     }
 }

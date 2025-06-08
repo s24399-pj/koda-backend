@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import pl.pjwstk.kodabackend.offer.persistance.repository.CarDetailsRepository;
+import pl.pjwstk.kodabackend.offer.persistence.repository.CarDetailsRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 public class BrandService {
 
     private final CarDetailsRepository carDetailsRepository;
-
 
     @Cacheable("allBrands")
     public List<String> getAllBrands() {
