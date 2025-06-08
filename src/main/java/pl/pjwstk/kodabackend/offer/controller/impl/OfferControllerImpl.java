@@ -1,7 +1,6 @@
 package pl.pjwstk.kodabackend.offer.controller.impl;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -29,12 +28,12 @@ import java.util.UUID;
 
 import static pl.pjwstk.kodabackend.offer.service.OfferMiniService.sortingAliasProcessor;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/offers")
 @Validated
 class OfferControllerImpl implements OfferController {
+
     private final OfferService offerService;
     private final OfferMiniService offerMiniService;
 
@@ -68,9 +67,9 @@ class OfferControllerImpl implements OfferController {
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('USER')")
     @Override
-    public OfferDto createOffer(@Validated @RequestBody CreateOfferCommand createOfferCommand, Principal principal) {
-        String userEmail = principal.getName();
-        return offerService.createOffer(createOfferCommand, userEmail);
+    public OfferDto createOffer(@Validated @RequestBody CreateOfferCommand createOfferCommand,
+                                Principal principal) {
+        return offerService.createOffer(createOfferCommand, principal.getName());
     }
 
     @DeleteMapping("/{id}")
@@ -78,8 +77,6 @@ class OfferControllerImpl implements OfferController {
     @PreAuthorize("hasRole('USER')")
     @Override
     public void deleteOffer(@PathVariable UUID id, Principal principal) {
-        log.info("Otrzymano żądanie usunięcia oferty o ID: {}", id);
-        String userEmail = principal.getName();
-        offerService.deleteOffer(id, userEmail);
+        offerService.deleteOffer(id, principal.getName());
     }
 }

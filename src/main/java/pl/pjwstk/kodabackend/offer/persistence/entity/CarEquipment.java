@@ -34,7 +34,6 @@ public class CarEquipment {
     @OneToOne(mappedBy = "carEquipment")
     private CarDetails carDetails;
 
-    // Komfort
     private Boolean airConditioning;
     private Boolean automaticClimate;
     private Boolean heatedSeats;
@@ -46,7 +45,6 @@ public class CarEquipment {
     private Boolean keylessEntry;
     private Boolean wheelHeating;
 
-    // Multimedia
     private Boolean navigationSystem;
     private Boolean bluetooth;
     private Boolean usbPort;
@@ -55,7 +53,6 @@ public class CarEquipment {
     private Boolean appleCarPlay;
     private Boolean soundSystem;
 
-    // Systemy wspomagające
     private Boolean parkingSensors;
     private Boolean rearCamera;
     private Boolean cruiseControl;
@@ -65,14 +62,12 @@ public class CarEquipment {
     private Boolean emergencyBraking;
     private Boolean startStop;
 
-    // Oświetlenie
     private Boolean xenonLights;
     private Boolean ledLights;
     private Boolean ambientLighting;
     private Boolean automaticLights;
     private Boolean adaptiveLights;
 
-    // Dodatkowe funkcje
     private Boolean heatedSteeringWheel;
     private Boolean electricTrunk;
     private Boolean electricSunBlind;

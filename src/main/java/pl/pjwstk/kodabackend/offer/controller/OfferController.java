@@ -87,7 +87,7 @@ public interface OfferController {
     })
     @GetMapping("/find")
     List<String> findOfferNamesByPhrase(
-            @Parameter(description = "Search phrase (min 3, max 100 characters)", required = true)
+            @Parameter(description = "Search phrase (min 3, max 100 characters)")
             @RequestParam @NotBlank @Size(min = 3, max = 100) String phrase
     );
 
@@ -112,7 +112,7 @@ public interface OfferController {
     })
     @GetMapping("/{id}")
     OfferDto findOfferById(
-            @Parameter(description = "Offer UUID identifier", required = true)
+            @Parameter(description = "Offer UUID identifier")
             @PathVariable UUID id
     );
 
@@ -148,13 +148,42 @@ public interface OfferController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     OfferDto createOffer(
-            @Parameter(description = "Offer creation data", required = true)
+            @Parameter(description = "Offer creation data")
             @Valid @RequestBody CreateOfferCommand createOfferCommand,
             Principal principal
     );
 
+    @Operation(
+            summary = "Delete offer by ID",
+            description = "Deletes an offer by its UUID. Only the offer owner can delete their own offers."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Successfully deleted the offer"
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized, user not logged in",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Forbidden, user can only delete their own offers",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Offer with the given ID was not found",
+                    content = @Content
+            )
+    })
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('USER')")
-    void deleteOffer(@PathVariable UUID id, Principal principal);
+    void deleteOffer(
+            @Parameter(description = "Offer UUID identifier")
+            @PathVariable UUID id,
+            Principal principal
+    );
 }
