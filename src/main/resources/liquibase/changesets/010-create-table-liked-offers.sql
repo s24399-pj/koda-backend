@@ -1,4 +1,4 @@
--- changeset s5323:009-create-table-liked-offers
+-- changeset s25323:010-create-table-liked-offers
 -- comment Generate offers
 
 CREATE TABLE liked_offers (

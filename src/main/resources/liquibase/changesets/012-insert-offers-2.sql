@@ -1,4 +1,4 @@
--- changeset s24399:010-insert-offers-2
+-- changeset s24399:012-insert-offers-2
 -- comment Generate additional offers batch 2
 
 -- Declaration of variables for storing generated UUIDs

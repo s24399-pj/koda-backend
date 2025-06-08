@@ -1,4 +1,4 @@
---changeset [s25670]:009-update-profile-picture
+--changeset s25670:011-update-profile-picture
 --liquibase formatted sql
 --comment: Updating default picture of user
 

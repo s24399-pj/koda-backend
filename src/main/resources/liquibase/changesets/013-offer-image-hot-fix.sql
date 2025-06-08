@@ -1,4 +1,4 @@
---changeset s24399:011-offer-image-hot-fix
+--changeset s24399:013-offer-image-hot-fix
 --liquibase formatted sql
 --comment: Updating existing image urls
 
