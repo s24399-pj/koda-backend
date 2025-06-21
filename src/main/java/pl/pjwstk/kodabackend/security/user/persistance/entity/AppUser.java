@@ -46,6 +46,7 @@ public class AppUser implements UserDetails {
     private String password;
     private String firstName;
     private String lastName;
+    private String phoneNumber;
 
     @Column(name = "profile_picture")
     private byte[] profilePicture;

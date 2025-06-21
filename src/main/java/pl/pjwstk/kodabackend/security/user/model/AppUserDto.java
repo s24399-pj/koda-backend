@@ -41,6 +41,13 @@ public class AppUserDto {
     private String email;
 
     @Schema(
+            description = "User's phone number",
+            example = "123456789",
+            format = "phone_number"
+    )
+    private String phoneNumber;
+
+    @Schema(
             description = "User's profile picture as base64 encoded byte array",
             nullable = true
     )

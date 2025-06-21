@@ -8,6 +8,7 @@ CREATE TABLE app_users
     password        VARCHAR(255) NOT NULL,
     first_name      VARCHAR(255),
     last_name       VARCHAR(255),
+    phone_number    VARCHAR(9) NOT NULL,
     profile_picture BYTEA,
     locked          BOOLEAN DEFAULT FALSE NOT NULL,
     enabled         BOOLEAN DEFAULT FALSE NOT NULL,
