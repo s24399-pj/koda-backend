@@ -40,6 +40,7 @@ class UserInternalControllerImpl implements UserInternalController {
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
+                .phoneNumber(user.getPhoneNumber())
                 .profilePicture(Optional.ofNullable(user.getProfilePicture()).orElse(new byte[0]))
                 .build();
     }
@@ -60,6 +61,7 @@ class UserInternalControllerImpl implements UserInternalController {
                     .firstName(user.getFirstName())
                     .lastName(user.getLastName())
                     .email(user.getEmail())
+                    .phoneNumber(user.getPhoneNumber())
                     .profilePicture(Optional.ofNullable(user.getProfilePicture()).orElse(new byte[0]))
                     .build();
 

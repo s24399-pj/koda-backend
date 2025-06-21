@@ -38,6 +38,7 @@ public class AppUserService {
                 .role(Role.USER)
                 .firstName(command.getFirstName())
                 .lastName(command.getLastName())
+                .phoneNumber(command.getPhoneNumber())
                 .enabled(true)
                 .build();
 

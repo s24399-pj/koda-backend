@@ -45,4 +45,12 @@ public class CreateUserCommand {
     @Size(max = 50, message = "LAST_NAME_TOO_LONG")
     @Pattern(regexp = "^[\\p{L} .'-]*$", message = "LAST_NAME_INVALID_CHARACTERS")
     String lastName;
+
+    @Schema(description = "User's phone number",
+            example = "123456789",
+            minLength = 9,
+            maxLength = 9)
+    @Size(min = 9, max = 9, message = "PHONE_NUMBER_INVALID_LENGTH")
+    @Pattern(regexp = "^[0-9]{9}$", message = "PHONE_NUMBER_INVALID_FORMAT")
+    String phoneNumber;
 }

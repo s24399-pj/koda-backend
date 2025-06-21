@@ -56,6 +56,8 @@ public class OfferService {
         }
 
         offer.setViewCount(0);
+        offer.setContactEmail(user.getEmail());
+        offer.setContactPhone(user.getPhoneNumber());
 
         Offer savedOffer = offerRepository.save(offer);
 
