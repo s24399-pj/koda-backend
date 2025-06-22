@@ -23,4 +23,7 @@ public interface CarDetailsRepository extends JpaRepository<CarDetails, UUID> {
 
     @Query("SELECT DISTINCT cd.brand FROM CarDetails cd WHERE LOWER(cd.brand) LIKE LOWER(CONCAT('%', :phrase, '%')) ORDER BY cd.brand")
     Page<String> findBrandsByPhrasePageable(@Param("phrase") String phrase, Pageable pageable);
+
+    @Query("SELECT DISTINCT cd.model FROM CarDetails cd WHERE cd.brand = :brand ORDER BY cd.model")
+    Page<String> findModelsByBrand(@Param("brand") String brand, Pageable pageable);
 }

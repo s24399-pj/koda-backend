@@ -34,6 +34,12 @@ public interface AdvancedSearchController {
             @RequestParam String phrase,
             Pageable pageable);
 
+    @GetMapping("/models")
+    @Operation(summary = "Get car models by brand", description = "Returns a list of all car models for a specific brand")
+    ResponseEntity<Page<String>> getModelsByBrand(
+            @RequestParam String brand,
+            Pageable pageable);
+
     @GetMapping("/fuel-types")
     @Operation(summary = "Get all fuel types", description = "Returns a list of all available fuel types")
     ResponseEntity<Page<String>> getFuelTypes(Pageable pageable);
