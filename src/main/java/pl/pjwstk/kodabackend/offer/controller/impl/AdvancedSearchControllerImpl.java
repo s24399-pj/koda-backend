@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -49,13 +51,10 @@ class AdvancedSearchControllerImpl implements AdvancedSearchController {
     @Override
     public ResponseEntity<Page<String>> getModelsByBrand(
             @RequestParam String brand,
-            Pageable pageable) {
+            @PageableDefault(size = 20, direction = Sort.Direction.ASC) Pageable pageable) {
         try {
-            List<String> models = modelService.getModelsByBrand(brand);
-            log.info("Found {} models for brand: {}", models.size(), brand);
-
-            Page<String> modelPage = new PageImpl<>(models, pageable, models.size());
-            return ResponseEntity.ok(modelPage);
+            log.info("Fetching models for brand: {}", brand);
+            return ResponseEntity.ok(modelService.getModelsByBrand(brand, pageable));
         } catch (Exception e) {
             log.error("Error fetching models for brand: {}", brand, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
