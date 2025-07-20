@@ -1,6 +1,7 @@
 package pl.pjwstk.kodabackend.config;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -15,7 +16,6 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
@@ -23,6 +23,7 @@ import pl.pjwstk.kodabackend.security.token.JwtService;
 import pl.pjwstk.kodabackend.security.user.AppUserService;
 import pl.pjwstk.kodabackend.security.user.persistance.entity.AppUser;
 
+@Slf4j
 @Configuration
 @EnableWebSocketMessageBroker
 @RequiredArgsConstructor
@@ -53,6 +54,7 @@ class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     }
 
     private class JwtAuthenticationInterceptor implements ChannelInterceptor {
+
         @Override
         public Message<?> preSend(@NonNull Message<?> message, @NonNull MessageChannel channel) {
             StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
@@ -71,18 +73,30 @@ class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         }
 
         private void processJwtToken(String token, @NonNull StompHeaderAccessor accessor) {
-            String userEmail = jwtService.extractUsername(token);
+            try {
+                String userEmail = jwtService.extractUsername(token);
 
-            if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                AppUser user = userService.getUserByEmail(userEmail);
+                if (userEmail != null) {
+                    AppUser user = userService.getUserByEmail(userEmail);
 
-                if (user != null && jwtService.isTokenValid(token, user)) {
-                    UsernamePasswordAuthenticationToken authToken =
-                            new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                    if (user != null && jwtService.isTokenValid(token, user)) {
+                        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                                user,
+                                null,
+                                user.getAuthorities()
+                        ) {
+                            @Override
+                            public String getName() {
+                                return user.getId().toString();
+                            }
+                        };
 
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
-                    accessor.setUser(authToken);
+                        accessor.setUser(authToken);
+                        log.debug("WebSocket authentication successful for user: {}", user.getId());
+                    }
                 }
+            } catch (Exception e) {
+                log.error("Error during WebSocket authentication: {}", e.getMessage());
             }
         }
     }

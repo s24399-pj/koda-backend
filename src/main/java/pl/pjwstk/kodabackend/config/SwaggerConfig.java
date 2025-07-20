@@ -6,7 +6,6 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,7 +15,7 @@ import java.util.List;
 class SwaggerConfig {
 
     @Bean
-    OpenAPI customOpenAPI(@Value("${koda.frontend.url}") String frontendUrl) {
+    OpenAPI customOpenAPI() {
 
         return new OpenAPI()
                 .info(new Info()
@@ -48,7 +47,7 @@ class SwaggerConfig {
                                 - Spring Modulith (modular architecture)
                                 - PostgreSQL database
                                 - Liquibase for DB migrations
-                                - JWT authentication (jjwt)
+                                - JWT authentication (jwt)
                                 - Jakarta Validation API
                                 - SpringDoc OpenAPI
                                 """))
