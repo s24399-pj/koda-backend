@@ -24,8 +24,8 @@ public class UserUtils {
      */
     public UUID extractUserIdFromPrincipal(Principal principal) {
         if (principal instanceof Authentication authentication && authentication.getPrincipal() instanceof AppUser appUser) {
-                return appUser.getId();
-            }
+            return appUser.getId();
+        }
 
         throw new AuthenticationCredentialsNotFoundException("Cannot extract user ID from principal: " + principal);
     }
@@ -39,8 +39,8 @@ public class UserUtils {
      */
     public AppUser extractUserFromPrincipal(Principal principal) {
         if (principal instanceof Authentication authentication && authentication.getPrincipal() instanceof AppUser appUser) {
-                return appUser;
-            }
+            return appUser;
+        }
 
         throw new AuthenticationCredentialsNotFoundException("Cannot extract user from principal: " + principal);
     }

@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import pl.pjwstk.kodabackend.offer.persistence.repository.CarDetailsRepository;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 @Service

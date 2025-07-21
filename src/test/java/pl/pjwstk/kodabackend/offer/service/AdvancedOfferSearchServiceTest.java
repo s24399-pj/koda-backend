@@ -22,6 +22,7 @@ import pl.pjwstk.kodabackend.security.user.persistance.entity.AppUser;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -136,7 +137,7 @@ class AdvancedOfferSearchServiceTest {
         AdvancedSearchRequest request = new AdvancedSearchRequest();
         request.setPhrase("BMW");
 
-        List<Offer> filteredOffers = Arrays.asList(offer1);
+        List<Offer> filteredOffers = Collections.singletonList(offer1);
         Page<Offer> offerPage = new PageImpl<>(filteredOffers, pageable, 1);
 
         when(offerRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(offerPage);
@@ -161,7 +162,7 @@ class AdvancedOfferSearchServiceTest {
         request.setMinPrice(new BigDecimal("50000"));
         request.setMaxPrice(new BigDecimal("90000"));
 
-        List<Offer> filteredOffers = Arrays.asList(offer2);
+        List<Offer> filteredOffers = Collections.singletonList(offer2);
         Page<Offer> offerPage = new PageImpl<>(filteredOffers, pageable, 1);
 
         when(offerRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(offerPage);
@@ -187,7 +188,7 @@ class AdvancedOfferSearchServiceTest {
         AdvancedSearchRequest request = new AdvancedSearchRequest();
         request.setUserId(userId);
 
-        List<Offer> filteredOffers = Arrays.asList(offer1);
+        List<Offer> filteredOffers = Collections.singletonList(offer1);
         Page<Offer> offerPage = new PageImpl<>(filteredOffers, pageable, 1);
 
         when(offerRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(offerPage);
@@ -217,7 +218,7 @@ class AdvancedOfferSearchServiceTest {
         request.setMinYear(2019);
         request.setMaxYear(2021);
 
-        List<Offer> filteredOffers = Arrays.asList(offer1);
+        List<Offer> filteredOffers = Collections.singletonList(offer1);
         Page<Offer> offerPage = new PageImpl<>(filteredOffers, pageable, 1);
 
         when(offerRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(offerPage);
@@ -240,7 +241,7 @@ class AdvancedOfferSearchServiceTest {
         request.setNavigationSystem(true);
         request.setParkingSensors(true);
 
-        List<Offer> filteredOffers = Arrays.asList(offer1);
+        List<Offer> filteredOffers = Collections.singletonList(offer1);
         Page<Offer> offerPage = new PageImpl<>(filteredOffers, pageable, 1);
 
         when(offerRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(offerPage);

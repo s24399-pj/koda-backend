@@ -16,22 +16,23 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class FileStorageServiceTest {
 
-    @Mock
-    private ImageUploadProperties uploadProperties;
-
-    @Mock
-    private ResourceLoader resourceLoader;
-
-    private FileStorageService fileStorageService;
-
     @TempDir
     Path tempDir;
+    @Mock
+    private ImageUploadProperties uploadProperties;
+    @Mock
+    private ResourceLoader resourceLoader;
+    private FileStorageService fileStorageService;
 
     @BeforeEach
     void setUp() {

@@ -1,6 +1,6 @@
 koda:
   frontend:
-    url: http://localhost:5173, http://192.168.1.108:5173
+    url: http://localhost:5173
   security:
     jwt:
       secret-key: baf1e39a8c58425f98c9dce83abe581fd7ad3ce76984c5f48cc9f781dcf30d47ba9c7e862548412dabc851f8bf26e903
