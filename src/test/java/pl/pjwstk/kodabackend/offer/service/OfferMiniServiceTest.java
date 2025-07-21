@@ -1,4 +1,4 @@
-package pl.pjwstk.kodabackend.offer;
+package pl.pjwstk.kodabackend.offer.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,6 @@ import pl.pjwstk.kodabackend.offer.handler.OfferSearchHandler;
 import pl.pjwstk.kodabackend.offer.model.OfferMiniDto;
 import pl.pjwstk.kodabackend.offer.model.OfferSearchRequest;
 import pl.pjwstk.kodabackend.offer.persistence.entity.FuelType;
-import pl.pjwstk.kodabackend.offer.service.OfferMiniService;
 
 import java.math.BigDecimal;
 import java.util.Collections;

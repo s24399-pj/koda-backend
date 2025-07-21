@@ -96,7 +96,6 @@ public class ImageUploadUseCase {
         log.info("Starting upload of {} standalone files by user: {}", files.length, userEmail);
 
         validationService.validateUploadRequest(files);
-        AppUser user = findUserByEmail(userEmail);
 
         List<ImageUploadResponse> responses = new ArrayList<>();
 

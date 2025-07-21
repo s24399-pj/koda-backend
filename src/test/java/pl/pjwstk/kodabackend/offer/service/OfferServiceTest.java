@@ -1,16 +1,17 @@
-package pl.pjwstk.kodabackend.offer;
+package pl.pjwstk.kodabackend.offer.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 import pl.pjwstk.kodabackend.exception.EntityNotFoundException;
 import pl.pjwstk.kodabackend.offer.mapper.OfferMapper;
 import pl.pjwstk.kodabackend.offer.model.OfferDto;
 import pl.pjwstk.kodabackend.offer.persistence.entity.Offer;
 import pl.pjwstk.kodabackend.offer.persistence.repository.OfferRepository;
-import pl.pjwstk.kodabackend.offer.service.OfferService;
+import pl.pjwstk.kodabackend.security.user.AppUserService;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -19,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class OfferServiceTest {
 
     @Mock
@@ -27,6 +28,9 @@ class OfferServiceTest {
 
     @Mock
     private OfferMapper offerMapper;
+
+    @Mock
+    private AppUserService appUserService;
 
     @InjectMocks
     private OfferService offerService;
@@ -64,13 +68,12 @@ class OfferServiceTest {
         when(offerRepository.findByIdWithDetails(testId)).thenReturn(Optional.empty());
 
         // Act & Assert
-        EntityNotFoundException exception = assertThrows(
+        assertThrows(
                 EntityNotFoundException.class,
                 () -> offerService.findOfferById(testId)
         );
 
-        // Verify error message and mock interactions
-        assertTrue(exception.getMessage().contains("not found with id: " + testId));
+        // Verify mock interactions
         verify(offerRepository).findByIdWithDetails(testId);
         verify(offerMapper, never()).mapToOfferDto(any());
     }

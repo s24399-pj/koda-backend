@@ -4,15 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import pl.pjwstk.kodabackend.image.model.FileInfo;
 import pl.pjwstk.kodabackend.image.model.ImageUploadResponse;
 import pl.pjwstk.kodabackend.image.model.UploadStats;
 import pl.pjwstk.kodabackend.image.usecase.DeleteImageUseCase;
 import pl.pjwstk.kodabackend.image.usecase.ImageUploadUseCase;
 
-import java.nio.file.Path;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 
@@ -45,14 +42,6 @@ public class ImageService {
 
     public List<String> listAllFiles() {
         return storageService.listAllFiles();
-    }
-
-    public Path getFilePath(String filename) throws Exception {
-        return storageService.getFilePath(filename);
-    }
-
-    public Optional<FileInfo> getFileInfo(String filename) {
-        return storageService.getFileInfo(filename);
     }
 
     public int cleanupUnusedFiles() {

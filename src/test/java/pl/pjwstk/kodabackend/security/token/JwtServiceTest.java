@@ -202,19 +202,6 @@ class JwtServiceTest {
                 .compact();
     }
 
-    private String createExpiredToken(UserDetails userDetails) {
-        Date now = new Date(System.currentTimeMillis() - 2 * ACCESS_TOKEN_EXPIRATION);
-        Date expiryDate = new Date(System.currentTimeMillis() - ACCESS_TOKEN_EXPIRATION);
-
-        return Jwts
-                .builder()
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(now)
-                .setExpiration(expiryDate)
-                .signWith(getTestSigningKey(), SignatureAlgorithm.HS256)
-                .compact();
-    }
-
     private Key getTestSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);

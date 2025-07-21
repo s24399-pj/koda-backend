@@ -20,15 +20,6 @@ public record UploadStats(
         return new UploadStatsBuilder();
     }
 
-    @Schema(description = "Human-readable formatted file size")
-    public String getTotalSizeFormatted() {
-        if (totalSizeBytes < 1024) return totalSizeBytes + " B";
-        if (totalSizeBytes < 1024 * 1024) return String.format("%.1f KB", totalSizeBytes / 1024.0);
-        if (totalSizeBytes < 1024 * 1024 * 1024)
-            return String.format("%.1f MB", totalSizeBytes / (1024.0 * 1024.0));
-        return String.format("%.1f GB", totalSizeBytes / (1024.0 * 1024.0 * 1024.0));
-    }
-
     public static class UploadStatsBuilder {
         private int totalFiles;
         private long totalSizeBytes;

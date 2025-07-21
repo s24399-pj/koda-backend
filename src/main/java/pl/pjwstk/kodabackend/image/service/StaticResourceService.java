@@ -21,13 +21,12 @@ public class StaticResourceService {
 
     private final ImageService imageService;
     private final ResourceLocationStrategy resourceLocationStrategy;
-    private final FilenameValidator filenameValidator;
     private final ContentTypeResolver contentTypeResolver;
     private final ImageResponseBuilder responseBuilder;
 
     public ResponseEntity<Resource> serveImage(String filename) {
         try {
-            if (!filenameValidator.isValid(filename)) {
+            if (!FilenameValidator.isValid(filename)) {
                 log.warn("Dangerous filename detected: {}", filename);
                 return ResponseEntity.badRequest().build();
             }

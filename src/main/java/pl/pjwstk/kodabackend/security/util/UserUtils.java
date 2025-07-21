@@ -1,5 +1,6 @@
 package pl.pjwstk.kodabackend.security.util;
 
+import lombok.experimental.UtilityClass;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import pl.pjwstk.kodabackend.security.user.persistance.entity.AppUser;
@@ -10,6 +11,7 @@ import java.util.UUID;
 /**
  * Utility class for extracting user information from authentication context
  */
+@UtilityClass
 public class UserUtils {
 
     /**
@@ -20,12 +22,11 @@ public class UserUtils {
      * @return UUID of the authenticated user
      * @throws AuthenticationCredentialsNotFoundException if principal is not properly authenticated
      */
-    public static UUID extractUserIdFromPrincipal(Principal principal) {
-        if (principal instanceof Authentication authentication) {
-            if (authentication.getPrincipal() instanceof AppUser appUser) {
+    public UUID extractUserIdFromPrincipal(Principal principal) {
+        if (principal instanceof Authentication authentication && authentication.getPrincipal() instanceof AppUser appUser) {
                 return appUser.getId();
             }
-        }
+
         throw new AuthenticationCredentialsNotFoundException("Cannot extract user ID from principal: " + principal);
     }
 
@@ -36,12 +37,11 @@ public class UserUtils {
      * @return AppUser object
      * @throws AuthenticationCredentialsNotFoundException if principal is not properly authenticated
      */
-    public static AppUser extractUserFromPrincipal(Principal principal) {
-        if (principal instanceof Authentication authentication) {
-            if (authentication.getPrincipal() instanceof AppUser appUser) {
+    public AppUser extractUserFromPrincipal(Principal principal) {
+        if (principal instanceof Authentication authentication && authentication.getPrincipal() instanceof AppUser appUser) {
                 return appUser;
             }
-        }
+
         throw new AuthenticationCredentialsNotFoundException("Cannot extract user from principal: " + principal);
     }
 }
