@@ -8,7 +8,6 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pl.pjwstk.kodabackend.image.config.ImageUploadProperties;
-import pl.pjwstk.kodabackend.image.model.FileInfo;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,7 +15,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -84,25 +82,6 @@ public class FileStorageService {
 
     public Path getFilePath(String filename) throws IOException {
         return getUploadPath().resolve(filename);
-    }
-
-    public Optional<FileInfo> getFileInfo(String filename) {
-        try {
-            Path filePath = getFilePath(filename);
-            if (!Files.exists(filePath)) {
-                return Optional.empty();
-            }
-
-            return Optional.of(FileInfo.builder()
-                    .filename(filename)
-                    .size(Files.size(filePath))
-                    .lastModified(Files.getLastModifiedTime(filePath).toInstant())
-                    .contentType(Files.probeContentType(filePath))
-                    .build());
-        } catch (IOException e) {
-            log.error("Error getting file info for: {}", filename, e);
-            return Optional.empty();
-        }
     }
 
     private void ensureDirectoryExists(Path uploadPath) throws IOException {

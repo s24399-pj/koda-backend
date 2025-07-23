@@ -1,4 +1,4 @@
-package pl.pjwstk.kodabackend.offer;
+package pl.pjwstk.kodabackend.offer.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,6 @@ import pl.pjwstk.kodabackend.offer.handler.OfferSearchHandler;
 import pl.pjwstk.kodabackend.offer.model.OfferMiniDto;
 import pl.pjwstk.kodabackend.offer.model.OfferSearchRequest;
 import pl.pjwstk.kodabackend.offer.persistence.entity.FuelType;
-import pl.pjwstk.kodabackend.offer.service.OfferMiniService;
 
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -37,21 +36,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class OfferMiniServiceTest {
 
-    @Mock
-    private OfferSearchHandler firstHandler;
-
-    @Mock
-    private OfferSearchHandler secondHandler;
-
-    @Mock
-    private OfferSearchHandler thirdHandler;
-
-    @Spy
-    private Set<OfferSearchHandler> handlers = new HashSet<>();
-
-    @InjectMocks
-    private OfferMiniService offerMiniService;
-
     private final OfferMiniDto sampleOffer = new OfferMiniDto(
             UUID.randomUUID(),
             "Test Car",
@@ -63,6 +47,16 @@ class OfferMiniServiceTest {
             150,
             "2.0"
     );
+    @Mock
+    private OfferSearchHandler firstHandler;
+    @Mock
+    private OfferSearchHandler secondHandler;
+    @Mock
+    private OfferSearchHandler thirdHandler;
+    @Spy
+    private Set<OfferSearchHandler> handlers = new HashSet<>();
+    @InjectMocks
+    private OfferMiniService offerMiniService;
 
     @BeforeEach
     void setUp() {

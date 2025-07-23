@@ -21,26 +21,36 @@ import pl.pjwstk.kodabackend.security.user.persistance.entity.AppUser;
 import pl.pjwstk.kodabackend.security.user.persistance.entity.Role;
 
 import java.security.Key;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyList;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class JwtServiceTest {
 
-    @Mock
-    private TokenRepository tokenRepository;
-
-    @InjectMocks
-    private JwtService jwtService;
-
-    @Captor
-    private ArgumentCaptor<Token> tokenCaptor;
-
     private final String SECRET_KEY = "testowyKluczTestowyKluczTestowyKluczTestowyKluczTestowyKluczTestowyKlucz";
     private final long ACCESS_TOKEN_EXPIRATION = 3600000;
+    @Mock
+    private TokenRepository tokenRepository;
+    @InjectMocks
+    private JwtService jwtService;
+    @Captor
+    private ArgumentCaptor<Token> tokenCaptor;
     private AppUser testUser;
     private String validToken;
 
@@ -192,19 +202,6 @@ class JwtServiceTest {
     private String createValidToken(UserDetails userDetails) {
         Date now = new Date(System.currentTimeMillis());
         Date expiryDate = new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION);
-
-        return Jwts
-                .builder()
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(now)
-                .setExpiration(expiryDate)
-                .signWith(getTestSigningKey(), SignatureAlgorithm.HS256)
-                .compact();
-    }
-
-    private String createExpiredToken(UserDetails userDetails) {
-        Date now = new Date(System.currentTimeMillis() - 2 * ACCESS_TOKEN_EXPIRATION);
-        Date expiryDate = new Date(System.currentTimeMillis() - ACCESS_TOKEN_EXPIRATION);
 
         return Jwts
                 .builder()

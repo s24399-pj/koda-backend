@@ -1,6 +1,6 @@
 package pl.pjwstk.kodabackend.image.validator;
 
-import org.springframework.stereotype.Component;
+import lombok.experimental.UtilityClass;
 
 /**
  * Validator for file names to prevent directory traversal attacks.
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * to access files outside the intended directory.
  * </p>
  */
-@Component
+@UtilityClass
 public class FilenameValidator {
 
     /**

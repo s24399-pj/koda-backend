@@ -3,7 +3,6 @@ package pl.pjwstk.kodabackend.offer.controller.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -17,8 +16,6 @@ import pl.pjwstk.kodabackend.offer.model.OfferDetailedDto;
 import pl.pjwstk.kodabackend.offer.service.AdvancedOfferSearchService;
 import pl.pjwstk.kodabackend.offer.service.FilterOptionsService;
 import pl.pjwstk.kodabackend.offer.service.ModelService;
-
-import java.util.List;
 
 @Slf4j
 @RestController
